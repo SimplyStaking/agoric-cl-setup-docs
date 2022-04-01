@@ -425,7 +425,7 @@ FEE_ISSUER_JSON='"RUN"' \
 agoric deploy api/flux-notifier.js --hostname=127.0.0.1:689<N>
 ```
   
-###### Step 10D4: Create a Flux Notifier
+###### Step 10D4: Add the oracle's notifier to the aggregator
 
 Run the following command in the root directory of the project.
 
