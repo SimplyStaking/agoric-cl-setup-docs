@@ -420,7 +420,7 @@ Run the following command in the root directory of the project.
 2. You have to change AGGREGATOR_INSTANCE_ID from the value returned in Step 10B
 
 ```bash
-AGGREGATOR_INSTANCE_ID=<boardId of aggregator instance from step 10B> \
+AGGREGATOR_INSTANCE_ID=<boardId of aggregator instance from step 10C> \
 FEE_ISSUER_JSON='"RUN"' \
 agoric deploy api/flux-notifier.js --hostname=127.0.0.1:689<N>
 ```
