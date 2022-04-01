@@ -417,7 +417,7 @@ const PRICE_QUERY = {
 Run the following command in the root directory of the project.
 
 1. You have to change N to the number of the oracle, starting from 1.
-2. You have to change AGGREGATOR_INSTANCE_ID from the value returned in Step 10B
+2. You have to change AGGREGATOR_INSTANCE_ID from the value returned in Step 10C
 
 ```bash
 AGGREGATOR_INSTANCE_ID=<boardId of aggregator instance from step 10C> \
