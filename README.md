@@ -431,11 +431,11 @@ Run the following command in the root directory of the project.
 
 Add the oracle's notifier to the aggregator.
 
-1. You have to change NOTIFIER_BOARD_ID to the notifier board ID from Step 10C2
+1. You have to change NOTIFIER_BOARD_ID to the notifier board ID from Step 10D2
 2. You have to change INSTANCE_HANDLE_BOARD_ID to the oracle board ID from Step 8
 
 ```bash
-NOTIFIER_BOARD_ID=<boardId of push notifier from Step 10C2> \
+NOTIFIER_BOARD_ID=<boardId of push notifier from Step 10D2> \
 INSTANCE_HANDLE_BOARD_ID=<boardId of oracle instance from Step 8> \
 IN_ISSUER_JSON='"BLD"' OUT_ISSUER_JSON='"USD"' \
 PRICE_DECIMALS=2 \
