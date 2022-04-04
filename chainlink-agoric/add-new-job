@@ -1,0 +1,25 @@
+#!/bin/bash
+
+thisdir=$(dirname -- "$BASH_SOURCES[0]")
+cd "$thisdir" || exit $?
+
+source ./internal-scripts/common.sh
+
+add_new_job() {
+
+  source ./internal-scripts/add-jobspec.sh
+
+  #add the job
+  add_jobspec $1
+  echo "Job: $JOBID"
+
+  #copy the job params
+  cp $2 ../api/flux-params.js
+  #copy the newly generated job id
+  sed -i "s/JOB_ID/$JOBID/g" ../api/flux-params.js
+ 
+}
+
+echo "Adding jobspec: $1"
+echo "Adding flux params: $2"
+add_new_job $1 $2

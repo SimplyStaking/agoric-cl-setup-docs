@@ -1,0 +1,28 @@
+#!/bin/bash
+
+thisdir=$(dirname -- "$BASH_SOURCES[0]")
+cd "$thisdir" || exit $?
+
+source ./internal-scripts/common.sh
+
+run_setup() {
+  # yarn install
+
+  touch external_initiator1.env
+
+  export AG_NETWORK_CONFIG=${1-"/usr/src/dapp-oracle/chainlink-agoric/etc/network-config.json"}
+  echo "Network config: $AG_NETWORK_CONFIG"
+
+  start_docker 300 1
+
+  source ./internal-scripts/add-ei.sh
+
+  add_ei "1"
+
+  source ./internal-scripts/add-bridge.sh
+
+  add_bridge "1"
+
+}
+
+run_setup
