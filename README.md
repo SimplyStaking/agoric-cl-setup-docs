@@ -130,8 +130,8 @@ Run the given command from Step 7 in the root directory of dapp-oracle
 
 ```bash
 NO_AGGREGATOR_INSTANCE_LOOKUP='["agoricNames","instance","BLD-USD priceAggregator"]' \
-IN_BRAND_LOOKUP='["wallet","brand","BLD"]' \
-OUT_BRAND_LOOKUP='["agoricNames","oracleBrand","USD"]' \
-FEE_ISSUER_LOOKUP='["wallet","issuer","RUN"]' \
+IN_BRAND_LOOKUP='["agoricNames","brand","BLD"]' \
+OUT_BRAND_LOOKUP='["agoricNames","brand","RUN"]' \
+FEE_ISSUER_LOOKUP='["agoricNames","issuer","RUN"]' \
 agoric deploy api/flux-notifier.js --hostname=127.0.0.1:6891
 ```
