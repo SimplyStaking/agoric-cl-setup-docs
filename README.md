@@ -102,7 +102,7 @@ This step involves the following:
 
 ## Step 7: Get details from network administrators
 
-The network administartors will rpovide the following:
+The network administartors will provide the following:
 
 1. JSON job spec file
 2. JS Flux Params file
