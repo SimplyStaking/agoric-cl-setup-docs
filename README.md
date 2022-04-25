@@ -57,6 +57,7 @@ The next step involves running the script found at <b>chainlink-agoric/setup</b>
 ```bash
 #run this in the root directory of this project
 cd chainlink-agoric
+#this might not be necessary, skip if it errors
 docker-compose pull
 #When it asks for more to start other oracles, choose Y (yes)
 ./setup
@@ -73,7 +74,7 @@ This setup script does the following:
     - Transfers coins to the ag-solo node
     - Installs the dapp-oracle contract
     - Adds the dapp-oracle to the Agoric node
-3. Adds the external initiator to the Chainlin knode via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
+3. Adds the external initiator to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 4. Adds the external adapter to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 5. Adds a jobspec to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-jobspec.sh</b>
 
