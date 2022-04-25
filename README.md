@@ -70,9 +70,9 @@ This setup script does the following:
     - Chainlink Agoric External Adapter
     - Chainlink Agoric External Initiator
 2. Creates an Oracle with a dApp via <b>chainlink-agoric/internal-scripts/add-dapp-oracle.sh</b> which does the following:
-    - Transferscoins to the ag-solo node
+    - Transfers coins to the ag-solo node
     - Installs the dapp-oracle contract
-    - Adds the dapp-oracle to the Agoric nod
+    - Adds the dapp-oracle to the Agoric node
 3. Adds the external initiator to the Chainlin knode via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 4. Adds the external adapter to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 5. Adds a jobspec to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-jobspec.sh</b>
