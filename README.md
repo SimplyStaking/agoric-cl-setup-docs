@@ -344,7 +344,7 @@ Run the following command in the root directory of the project.
 
 ```bash
 IN_ISSUER_JSON='"BLD"' OUT_ISSUER_JSON='"USD"' \
-agoric deploy api/aggregate.js --hostname=127.0.0.1:7999
+agoric deploy api/aggregate.js --hostport=127.0.0.1:7999
 ```
 
 ##### Step 10D: We have to repeat this for all oracles 
