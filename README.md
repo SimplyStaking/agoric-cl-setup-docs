@@ -59,6 +59,7 @@ The next step involves running the script found at <b>chainlink-agoric/setup</b>
 cd chainlink-agoric
 #this might not be necessary, skip if it errors
 docker-compose pull
+#IMP: Change ag-solo port definitions to 0.0.0.0 in dapp-oracle/chainlink-agoric/docker-compose.yml file
 #When it asks for more to start other oracles, choose Y (yes)
 ./setup
 ```
