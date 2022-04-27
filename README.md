@@ -2,6 +2,8 @@
 
 This is a step-by-step guide explaining how to set up a Chainlink node and an oracle on Agoric
 
+## WHEN CLONING DAPP-ORACLE - USE BRANCH mfig-cl-aggregator
+
 ## Requirements
 
 Make sure you have the following requirements before starting:
