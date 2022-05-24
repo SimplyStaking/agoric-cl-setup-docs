@@ -1,10 +1,9 @@
-  GNU nano 4.8                                                      docker-compose.yml                                                                 
 version: "3.6"
 x-chainlink-def:
   &chainlink-def
   # image: smartcontract/chainlink:latest
-  image: agoric/chainlink:hacktheorb
-  restart: on-failure
+  image: public.ecr.aws/chainlink/chainlink:1.3.0
+  restart: always
   secrets:
     - node_password
     - apicredentials
@@ -21,35 +20,34 @@ x-postgres-def:
 x-ag-solo-node-def:
   &ag-solo-node-def
   image: agoric/cosmic-swingset-solo:${SDK_TAG:-latest}
-  restart: on-failure
+  restart: always
 x-external-initiator-def:
   &external-initiator-def
   # image: smartcontract/external-initiator
-  image: agoric/chainlink-external-initiator:latest
+  image: jacquesvcritien/agoric-cl-external-initiator:latest
 x-agoric-adapter-def:
   &agoric-adapter-def
-  # image: smartcontract/agoric-adapter
-  image: agoric/chainlink-adapter:latest
-  restart: on-failure
+  image: jacquesvcritien/agoric-chainlink-external-adapter:v2
+  restart: always
   env_file:
     - ./adapter.env
 services:
-  chainlink-node:
+  chainlink-node1:
     <<: *chainlink-def
     depends_on:
-      - postgres-node
+      - postgres-node1
     ports:
       - "6691:6688"
     environment:
-      - "DATABASE_URL=postgresql://chainlink@chainlink-agoric_postgres-node_1:5432/chainlink?sslmode=disable"
+      - "DATABASE_URL=postgresql://chainlink@chainlink-agoric_postgres-node1_1:5432/chainlink?sslmode=disable"
     volumes:
       - 'cl1:/chainlink'
-  postgres-node:
+  postgres-node1:
     <<: *postgres-def
     volumes:
       - './docker-init-scripts:/docker-entrypoint-initdb.d'
       - 'pg1:/var/lib/postgresql/data'
-  ag-solo-node:
+  ag-solo-node1:
     <<: *ag-solo-node-def
     ports:
       - "0.0.0.0:6891:6891"
@@ -58,27 +56,29 @@ services:
       - "AG_SOLO_BASEDIR=chainlink"
       - "AG_NETWORK_CONFIG=${AG_NETWORK_CONFIG}"
       - "DEBUG=SwingSet:vat,SwingSet:ls"
+      - "SOLO_SLOGFILE=/data/solo/solo.slog"
     volumes:
       - 'ag1:/usr/src/app/solo'
+      - 'ag1:/data/solo'
       - '$HOME/.agoric:/root/.agoric'
       - '..:/usr/src/dapp-oracle'
-  external-initiator-node:
+  external-initiator-node1:
     <<: *external-initiator-def
     depends_on:
-      - ag-solo-node
-      - postgres-node
+      - ag-solo-node1
+      - postgres-node1
     environment:
-      - "EI_DATABASEURL=postgresql://ei@chainlink-agoric_postgres-node_1:5432/ei?sslmode=disable"
-      - "EI_CHAINLINKURL=http://chainlink-agoric_chainlink-node_1:6688/"
-    command: '{\"name\":\"agoric-node\",\"type\":\"agoric\",\"url\":\"ws://chainlink-agoric_ag-solo-node_1:6891/api/oracle\"}'
+      - "EI_DATABASEURL=postgresql://ei@chainlink-agoric_postgres-node1_1:5432/ei?sslmode=disable"
+      - "EI_CHAINLINKURL=http://chainlink-agoric_chainlink-node1_1:6688/"
+    command: '{\"name\":\"agoric-node\",\"type\":\"agoric\",\"url\":\"ws://chainlink-agoric_ag-solo-node1_1:6891/api/oracle\"}'
     env_file:
       - ./external_initiator1.env
-  agoric-adapter:
+  agoric-adapter1:
     <<: *agoric-adapter-def
     depends_on:
-      - ag-solo-node
+      - ag-solo-node1
     environment:
-      - "AG_SOLO_ORACLE_URL=http://chainlink-agoric_ag-solo-node_1:6891/api/oracle"
+      - "AG_SOLO_ORACLE_URL=http://chainlink-agoric_ag-solo-node1_1:6891/api/oracle"
 volumes:
   pg1:
   cl1:

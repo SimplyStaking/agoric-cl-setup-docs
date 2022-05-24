@@ -12,7 +12,7 @@ add_ei() {
   payload=$(
     cat <<EOF
 {
-  "name": "test-ei",
+  "name": "ei",
   "url": "http://chainlink-agoric_external-initiator-node_1:8080/jobs"
 }
 EOF

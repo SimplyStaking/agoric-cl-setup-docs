@@ -16,7 +16,7 @@ node --version # 14.15.0 or higher
 npm install --global yarn
 git clone https://github.com/Agoric/agoric-sdk
 cd agoric-sdk
-git checkout mfig-oracle-management
+git checkout agoricdev-11
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -51,18 +51,16 @@ Change the IP in the file found in <b>dapp-oracle/chainlink-agoric/etc/network-c
 }
 ```
 
-## Step 4: Copy the docker-compose.yml and setup script files in this directory to the dapp-oracle directory
+## Step 4: Copy the new code files in this directory to the dapp-oracle directory
 
 The next step involves copying the docker-compose.yml file in this directory to the dapp-oracle directory because it contains more recent images
 
 ```bash
 #run this in the root directory of this project
-mv docker-compose.yml ../dapp-oracle/chainlink-agoric
-mv setup ../dapp-oracle/chainlink-agoric
-./setup
+mv chainlink-agoric/* ../dapp-oracle/chainlink-agoric
 ```
 
-## Step 6: Run setup script
+## Step 5: Run setup script
 
 The next step involves running the script found at <b>dapp-oracle/chainlink-agoric/setup</b>.
 
@@ -97,7 +95,7 @@ Do the following:
 yarn install
 ```
 
-## Step 7: Get AG Solo's address
+## Step 6: Get AG Solo's address
 
 Run the following
 
@@ -105,7 +103,7 @@ Run the following
 docker exec chainlink-agoric_ag-solo-node1_1 /bin/cat chainlink/ag-cosmos-helper-address
 ```
 
-## Step 8: Hit the faucet on Discord
+## Step 7: Hit the faucet on Discord
 
 1. Join Agoric's <a href="https://discord.com/invite/qDW8DRes4s">Discord Server</a>
 2. in #faucet run the following command and replace <addr-step7> with the address obtained from step 7
@@ -114,7 +112,7 @@ docker exec chainlink-agoric_ag-solo-node1_1 /bin/cat chainlink/ag-cosmos-helper
 !faucet client <addr-step7>
 ```
   
-## Step 9: Spawn the oracle
+## Step 8: Spawn the oracle
   
 Run the following command
   
@@ -122,24 +120,27 @@ Run the following command
 INSTALL_ORACLE="Chainlink oracle" agoric deploy api/spawn.js --hostport=127.0.0.1:6891
 ```
 
-## Step 10: Send the address to the network administrators
+## Step 9: Send the address to the network administrators
 
 This step involves the following:
 1) Once all the node operators send in their addresses, network administrators create a governance proposal
 2) Once it passes, the network administrators send a job spec in JSON format to each node operator
 
-## Step 11: Get details from network administrators
+## Step 10: Get details from network administrators
 
 The network administartors will provide the following:
 
 1. TOML job spec file
-2. Command to run
+2. List of bridges to add
+3. Command to run
 
-## Step 12: Create the Job + Set Flux Params
+## Step 11: Add the required bridges given in Step 10
+
+## Step 12: Create the Job
 
 Run the following command in the dapp/chainlink-agoric directory:
 
-<b> Note: </b> You have to replace <b> \<path-to-toml-job-spec> </b> and <b>\<path-to-js-flux-params></b>
+<b> Note: </b> You have to replace <b> \<path-to-toml-job-spec> </b>
 
 ```bash
 ./add-new-job <path-to-toml-job-spec>

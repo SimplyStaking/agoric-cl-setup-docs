@@ -9,7 +9,7 @@ add_jobspec() {
 
   login_cl "$CL_URL"
 
-  payload=$(cat $1 | jq -r '.')
+  payload=$(cat $1)
 
   echo -n "Posting..."
   while true; do

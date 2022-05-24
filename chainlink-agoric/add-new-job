@@ -13,13 +13,10 @@ add_new_job() {
   add_jobspec $1
   echo "Job: $JOBID"
 
-  #copy the job params
-  cp $2 ../api/flux-params.js
   #copy the newly generated job id
   sed -i "s/JOB_ID/$JOBID/g" ../api/flux-params.js
  
 }
 
 echo "Adding jobspec: $1"
-echo "Adding flux params: $2"
 add_new_job $1 $2

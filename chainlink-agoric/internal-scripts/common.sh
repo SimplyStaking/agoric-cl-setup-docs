@@ -64,7 +64,7 @@ run_ei() {
     } >"external_initiator$1.env"
   fi
 
-  docker-compose up -d "external-initiator-node"
+  docker-compose up -d "external-initiator-node$1"
 }
 
 start_docker() {
@@ -72,7 +72,10 @@ start_docker() {
   shift
   title "Starting Chainlink Docker containers $@"
 
-  containers="chainlink-node agoric-adapter"
+  containers=
+  for i in ${1+"$@"}; do
+    containers="$containers chainlink-node$i agoric-adapter$i"
+  done
   docker-compose up -d $containers
   
   for i in ${1+"$@"}; do
