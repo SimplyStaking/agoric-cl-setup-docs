@@ -9,12 +9,11 @@ add_jobspec() {
 
   login_cl "$CL_URL"
 
-  payload=$(cat $1)
-
+  jq -Rs  '{toml: .}' $1 > tmpjob
   echo -n "Posting..."
   while true; do
-    RESULT=$(curl -s -b ./tmp/cookiefile -d "$payload" -X POST -H 'Content-Type: application/json' "$CL_URL/v2/specs")
-    JOBID=$(echo $RESULT | jq -r '.data.id')
+    RESULT=$(curl -s -b ./tmp/cookiefile -d @tmpjob -X POST -H 'Content-Type: application/json' "$CL_URL/v2/jobs")
+    JOBID=$(echo $RESULT | jq -r '.data.attributes.externalJobID')
     [[ "$JOBID" == null ]] || break
     echo -n .
     sleep 5
