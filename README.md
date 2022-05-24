@@ -58,6 +58,7 @@ The next step involves copying the docker-compose.yml file in this directory to 
 ```bash
 #run this in the root directory of this project
 mv chainlink-agoric/* ../dapp-oracle/chainlink-agoric
+chmod +x ../dapp-oracle/chainlink-agoric/add-new-job
 ```
 
 ## Step 5: Run setup script
