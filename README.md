@@ -32,6 +32,7 @@ Before the setup, we have to run the following
 
 ```bash
 git clone https://github.com/Agoric/dapp-oracle.git
+cd dapp-oracle
 git checkout main
 agoric install
 ```
