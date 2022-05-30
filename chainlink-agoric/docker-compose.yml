@@ -24,7 +24,7 @@ x-ag-solo-node-def:
 x-external-initiator-def:
   &external-initiator-def
   # image: smartcontract/external-initiator
-  image: jacquesvcritien/agoric-cl-external-initiator:latest
+  image: jacquesvcritien/agoric-cl-external-initiator:no-loop
 x-agoric-adapter-def:
   &agoric-adapter-def
   image: jacquesvcritien/agoric-chainlink-external-adapter:v2
@@ -70,7 +70,7 @@ services:
     environment:
       - "EI_DATABASEURL=postgresql://ei@chainlink-agoric_postgres-node1_1:5432/ei?sslmode=disable"
       - "EI_CHAINLINKURL=http://chainlink-agoric_chainlink-node1_1:6688/"
-    command: '{\"name\":\"agoric-node\",\"type\":\"agoric\",\"url\":\"ws://chainlink-agoric_ag-solo-node1_1:6891/api/oracle\"}'
+    command: '{\"name\":\"agoric-node\",\"type\":\"agoric\",\"url\":\"ws://chainlink-agoric_ag-solo-node1_1:6891/api/oracle\"} --cl_timeout=30s'
     env_file:
       - ./external_initiator1.env
   agoric-adapter1:
