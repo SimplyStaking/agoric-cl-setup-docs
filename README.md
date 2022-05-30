@@ -9,14 +9,14 @@ Make sure you have the following requirements before starting:
 2. docker
 3. docker-compose
 
-## Step 1: Installing Agoric CLI (use agoricdev-11 branch)
+## Step 1: Installing Agoric CLI (use agoricdev-13 branch)
 
 ``` bash
 node --version # 14.15.0 or higher
 npm install --global yarn
 git clone https://github.com/Agoric/agoric-sdk
 cd agoric-sdk
-git checkout agoricdev-11
+git checkout agoricdev-13
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -44,7 +44,7 @@ Change the IP in the file found in <b>dapp-oracle/chainlink-agoric/etc/network-c
 
 ```json
 {
-  "chainName": "agoricdev-11",
+  "chainName": "agoricdev-13",
   "gci": "https://devnet.rpc.agoric.net:443/genesis",
   "rpcAddrs": [
     "https://devnet.rpc.agoric.net:443"
