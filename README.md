@@ -52,17 +52,7 @@ Change the IP in the file found in <b>dapp-oracle/chainlink-agoric/etc/network-c
 }
 ```
 
-## Step 4: Copy the new code files in this directory to the dapp-oracle directory
-
-The next step involves copying the docker-compose.yml file in this directory to the dapp-oracle directory because it contains more recent images
-
-```bash
-#run this in the root directory of this project
-mv chainlink-agoric/* ../dapp-oracle/chainlink-agoric
-chmod +x ../dapp-oracle/chainlink-agoric/add-new-job
-```
-
-## Step 5: Run setup script
+## Step 4: Run setup script
 
 The next step involves running the script found at <b>dapp-oracle/chainlink-agoric/setup</b>.
 
@@ -71,6 +61,7 @@ The next step involves running the script found at <b>dapp-oracle/chainlink-agor
 cd chainlink-agoric
 docker-compose pull
 ./setup
+#you will be prompted to create more oracles, click Y or N accoringly
 ```
 
 This setup script does the following:
@@ -97,15 +88,19 @@ Do the following:
 yarn install
 ```
 
-## Step 6: Get AG Solo's address
+## Step 5: Repeat this for all oracles
+
+<b>Wherever there is <N> change it with oracle number (1,2,3) </b>
+
+## Step 5A: Get AG Solo's address
 
 Run the following
 
 ```bash
-docker exec chainlink-agoric_ag-solo-node1_1 /bin/cat chainlink/ag-cosmos-helper-address
+docker exec chainlink-agoric_ag-solo-node<N>_1 /bin/cat chainlink/ag-cosmos-helper-address
 ```
 
-## Step 7: Hit the faucet on Discord
+### Step 5B: Hit the faucet on Discord
 
 1. Join Agoric's <a href="https://discord.com/invite/qDW8DRes4s">Discord Server</a>
 2. in #faucet run the following command and replace <addr-step7> with the address obtained from step 7
@@ -114,45 +109,73 @@ docker exec chainlink-agoric_ag-solo-node1_1 /bin/cat chainlink/ag-cosmos-helper
 !faucet client <addr-step7>
 ```
   
-## Step 8: Spawn the oracle
+### Step 5C: Spawn the oracle
   
 Run the following command
   
 ```bash
-INSTALL_ORACLE="Chainlink oracle" agoric deploy api/spawn.js --hostport=127.0.0.1:6891
+INSTALL_ORACLE="Chainlink oracle" agoric deploy api/spawn.js --hostport=127.0.0.1:689<N>
 ```
 
-## Step 9: Send the address to the network administrators
+## Step 6: Send the addresses to the network administrators
 
 This step involves the following:
 1) Once all the node operators send in their addresses, network administrators create a governance proposal
 2) Once it passes, the network administrators send a job spec in JSON format to each node operator
 
-## Step 10: Get details from network administrators
+## Step 7: Get details from network administrators
 
 The network administartors will provide the following:
 
 1. TOML job spec file
 2. List of bridges to add
 3. Command to run
+  
+## Step 8: Repeat this for all oracles
+  
+<b>Wherever there is <N> change it with oracle number (1,2,3) </b>
+  
+### Step 8A: Add the required bridges given in Step 7
 
-## Step 11: Add the required bridges given in Step 10
+### Step 8B: Create the Job
 
-## Step 12: Create the Job
+### Step 8C: Store the external job id of the new job
+  
+You have to do the following:
+1. Copy the external id of the job you just created
+  2. Edit the file in <b>dapp-oracle/api/flux-params.js</b> to the following
+  
+```js
+// These parameters will be different based on what the price aggregator
+// expects.  You may have to edit them!
 
-Run the following command in the dapp/chainlink-agoric directory:
+// What minimum percentage of the price difference should result in a notification?
+export const THRESHOLD = 0.1;
 
-<b> Note: </b> You have to replace <b> \<path-to-toml-job-spec> </b>
+// What minimum absolute change in price should result in a notification?
+export const ABSOLUTE_THRESHOLD = 0;
 
-```bash
-./add-new-job <path-to-toml-job-spec>
+// How many decimal places does the price need to be shifted by?
+export const PRICE_DECIMALS = 6;
+
+// This is the query submitted to the oracle.
+export const PRICE_QUERY = {
+  jobId: '<external-job-id>',
+};
+
+// If no new round is started in this number of seconds, the oracle will initiate a new round.
+export const IDLE_TIMER_PERIOD_S = 10n * 60n;
+
+// This is the number of seconds between each poll.
+export const POLL_TIMER_PERIOD_S = 60n;
+
+// This is sent to the oracle node as the fee amount for the flux monitor
+// query.  It isn't actually a real payment, just something to tell the oracle
+// job that it has permission to run.
+export const FEE_PAYMENT_VALUE = 0n;
 ```
 
-This will:
-1. Create the job on your Chainlink Node
-2. Prepare the flux parameter file for the next command
-
-## Step 13: Run the given command
+### Step 8D: Run the given command
 
 Run the given command from Step 11 in the root directory of dapp-oracle
 
@@ -163,5 +186,12 @@ AGGREGATOR_INSTANCE_LOOKUP='["agoricNames","instance","ATOM-USD priceAggregator"
 IN_BRAND_LOOKUP='["agoricNames","oracleBrand","ATOM"]' \
 OUT_BRAND_LOOKUP='["agoricNames","oracleBrand","USD"]' \
 FEE_ISSUER_LOOKUP='["wallet","issuer","RUN"]' \
-agoric deploy api/flux-notifier.js --hostport=127.0.0.1:6891
+agoric deploy api/flux-notifier.js --hostport=127.0.0.1:689<N>
 ```
+  
+### Step 8E: Accept the invitation
+
+  1. Go to <b>http://localhost:689<N></b>
+  2. Click accept on the popup as per the image below
+  
+  <img src="images/agpopup.png"></b>
