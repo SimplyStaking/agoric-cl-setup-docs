@@ -92,7 +92,7 @@ yarn install
 
 <b>Wherever there is \<N>< change it with oracle number (1,2,3) </b>
 
-## Step 5A: Get AG Solo's address
+### Step 5A: Get AG Solo's address
 
 Run the following
 
