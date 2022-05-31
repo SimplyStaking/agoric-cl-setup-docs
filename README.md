@@ -192,6 +192,6 @@ agoric deploy api/flux-notifier.js --hostport=127.0.0.1:689<N>
 ### Step 8E: Accept the invitation
 
   1. Go to <b>http://localhost:689\<N></b>
-  2. Click accept on the popup as per the image below
+  2. Click approve on the popup as per the image below
   
   <img src="images/agpopup.png"></b>
