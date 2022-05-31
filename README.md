@@ -163,5 +163,5 @@ AGGREGATOR_INSTANCE_LOOKUP='["agoricNames","instance","ATOM-USD priceAggregator"
 IN_BRAND_LOOKUP='["agoricNames","oracleBrand","ATOM"]' \
 OUT_BRAND_LOOKUP='["agoricNames","oracleBrand","USD"]' \
 FEE_ISSUER_LOOKUP='["wallet","issuer","RUN"]' \
-agoric deploy api/flux-notifier.js --hostname=127.0.0.1:6891
+agoric deploy api/flux-notifier.js --hostport=127.0.0.1:6891
 ```
