@@ -90,7 +90,7 @@ yarn install
 
 ## Step 5: Repeat this for all oracles
 
-<b>Wherever there is <N> change it with oracle number (1,2,3) </b>
+<b>Wherever there is \<N>< change it with oracle number (1,2,3) </b>
 
 ## Step 5A: Get AG Solo's address
 
@@ -133,7 +133,7 @@ The network administartors will provide the following:
   
 ## Step 8: Repeat this for all oracles
   
-<b>Wherever there is <N> change it with oracle number (1,2,3) </b>
+<b>Wherever there is \<N> change it with oracle number (1,2,3) </b>
   
 ### Step 8A: Add the required bridges given in Step 7
 
