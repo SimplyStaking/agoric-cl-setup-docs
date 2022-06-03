@@ -103,7 +103,7 @@ docker exec chainlink-agoric_ag-solo-node<N>_1 /bin/cat chainlink/ag-cosmos-help
 ### Step 5B: Hit the faucet on Discord
 
 1. Join Agoric's <a href="https://discord.com/invite/qDW8DRes4s">Discord Server</a>
-2. in #faucet run the following command and replace <addr-step7> with the address obtained from step 7
+2. in #faucet run the following command and replace <addr-step7> with the address obtained from step 5A
   
 ```bash
 !faucet client <addr-step7>
