@@ -2,7 +2,7 @@
 
 This is a step-by-step guide explaining how to set up a Chainlink node and an oracle on Agoric
 
-## WHEN CLONING DAPP-ORACLE - USE BRANCH mfig-cl-aggregator
+## WHEN CLONING DAPP-ORACLE - USE BRANCH main
 
 ## Requirements
 
@@ -11,14 +11,14 @@ Make sure you have the following requirements before starting:
 2. docker
 3. docker-compose
 
-## Step 1: Installing Agoric CLI (use mfig-cl-aggregator branch)
+## Step 1: Installing Agoric CLI (use master branch)
 
 ``` bash
 node --version # 14.15.0 or higher
 npm install --global yarn
 git clone https://github.com/Agoric/agoric-sdk
 cd agoric-sdk
-git checkout mfig-cl-aggregator
+git checkout master
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -95,26 +95,7 @@ Do the following:
 yarn install
 ```
 
-## Step 5: Record the output
-
-The setup script from the previous step returns an output of this format
-
-```
-board:<boardId_oracle1> jobId:<jobId_clNode1> ?API_URL=http://localhost:6891 CL=http://localhost:6691
-board:<boardId_oracle2> jobId:<jobId_clNode2> ?API_URL=http://localhost:6891 CL=http://localhost:6691
-board:<boardId_oracle3> jobId:<jobId_clNode3> ?API_URL=http://localhost:6891 CL=http://localhost:6691
-```
-
-Store this somewhere but if it is lost, this can be obtained by running
-
-```bash
-#run this in the root directory of this project
-cd chainlink-agoric
-node show-jobs.js
-```
-
-
-## Step 6: Log in the Chainlink node
+## Step 5: Log in the Chainlink node
 
 1. Head to either:
     - <b>http://localhost:6691</b> (If from the same VM)
@@ -125,210 +106,8 @@ Email: notreal@fakeemail.ch
 Password: twochains
 ```
 
-#### Step 6A: Confirm that a job exists
-
-a) Head to Jobs
-b) Make sure there is a job
-
-<img src="images/jobs.png"></img>
-
-#### Step 6B: Confirm there is a bridge
-
-a) Head to Bridges
-b) Make sure there is a bridge
-
-<img src="images/bridges.png"></img>
-
-## Step 7: Start Oracle dApp UI
-
-Add this json property to the file <b>dapp-oracle/ui/public/conf/defaults.js</b>
-
-```bash
-#replace <board_id> from board number from step 5
-"INSTANCE_HANDLE_BOARD_ID": "<board_id>"
-```
-
-Then, do the following:
-
-```bash
-#run this in the root directory of this project
-cd ui
-yarn install
-yarn start
-```
-
-Check the UI at either
-    - <b>http://localhost:3000?API_URL=http://<ag_solo_ip>:6891</b> (If from the same VM)
-    - <b>http://<vm_ip>:3000?API_URL=http://<ag_solo_ip>:6891</b> (If remotely)
-
-<img src="images/ui.png"></img>
-
-#### Step 7A: Change board
-
-Change the board number to the board number obtained from Step 5
-
-<img src="images/board.png"></img>
-
-#### Step 7B: Change jobId 
-
-Change jobId from the job ID obtained from Step 5
-
-<img src="images/jobid.png"></img>
-
-## Step 8: Executing a Job Run
-
-Let's assume we got back this output from Step 5
-
-```
-board:<boardId_oracle1> jobId:<jobId_clNode1> ?API_URL=http://localhost:6891 CL=http://localhost:6691
-board:<boardId_oracle2> jobId:<jobId_clNode2> ?API_URL=http://localhost:6891 CL=http://localhost:6691
-board:<boardId_oracle3> jobId:<jobId_clNode3> ?API_URL=http://localhost:6891 CL=http://localhost:6691
-```
-
-#### Step 8A: Fill in query details
-
-To run a job sepc, in the dApp UI we enter the aforementioned values as explained in Steps 7A and 7B and then hit <b>Query Oracle!</b> as can be seen in the image below
-
-<img src="images/createjob1.png"></img>
-
-#### Step 8B: Wait for Query and Reply
-
-After pressing <b>Query Oracle!</b>, you should be able to see the result as waiting
-
-<img src="images/createjob2.png"></img>
-
-Then, you should press <b>Reply and Collect</b> to reply the result to the node as below
-
-<img src="images/createjob3.png"></img>
-
-Finally, you should be able to view the result which should replace the text <b>Waiting...</b> as below
-
-<img src="images/createjob4.png"></img>
-
-#### Step 8C: Check Job Run on Chainlink Node
-
-1. Login like in Step 6 and head to Jobs
-2. Click on Jobs
-3. Choose the job with the ID entered in the query in Step 7B
-4. Click on the last job run
-5. Confirm that the value matches the one shown in Step 8B
-<img src="images/createjob5.png"></img>
-
-## Step 9: Creating a Scheduled Job Run
-
-##### Step 9A: Create a Push Notifier
-
-1. Head to the Oracle dApp UI as in Step 7
-2. Click on <b>Create Push Query</b> as below
-
-<img src="images/9a.png"></img>
-
-3. Take note of the Notifier board and queryId as below
-
-<img src="images/9a2.png"></img>
-
-#### Step 9B: Log in to the Chainlink Node and add a scheduled job
-
-1. Log in the Chainlink Node like Step 6
-2. Go to Jobs
-3. Click <b>New Job</b>
-4. Paste in the following job and replace <b><query_id></b> with the queryId from the previous step having the format <b>push-x</b>. This job runs automatically every 1 minute.
-
-```json
-{
-  "initiators": [
-    {
-      "type": "cron",
-      "params": {
-          "schedule": "CRON_TZ=UTC */1 * * * *"
-      }
-    }
-  ],
-  "tasks": [
-    {
-      "type": "HTTPGet",
-      "confirmations": 0,
-      "params": { "get": "https://bitstamp.net/api/ticker/" }
-    },
-    {
-      "type": "JSONParse",
-      "params": { "path": [ "last" ] }
-    },
-    {
-      "type": "Multiply",
-      "params": { "times": 100 }
-    },
-    {
-      "type": "Agoric",
-      "params": {
-        "request_id": "<query_id>",
-        "payment": "0"
-      }
-    }
-  ]
-}
-```
-
-5. Click <b>Create Job</b>
-
-#### Step 9C: Confirm Job Runs are running
-
-1. Go to Jobs
-2. Click on the most recent job by looking at the created date
-<img src="images/9c.png"></img>
-3. Confirm there are job runs
-<img src="images/9c2.png"></img>
-4. You should also see the latest value being changed here<br><img src="images/9c3.png"></img>
-
-#### Step 9D: Open the ag-solo node REPL
-
-1. Go to the VM where the docker containers are running, more specifically where the ag-solo node is running
-2. Run the following to open the UI to interact with the node
-
-```bash
-agoric open --repl --hostport=127.0.0.1:6891
-```
-3. Check the UI at either
-    - <b>http://localhost:6891</b> (If from the same VM)
-    - <b>http://<vm_ip>:6891</b> (If remotely)
-
-<img src="images/9d.png"></img>
-
-#### Step 9E: Run this command to get the latest pushed price
-
-Run this command to get the latest pushed price. You need to replace <b><board_id></b> with the notifier board ID from Step 9A.3
-
-```js
-E(E(agoric.board).getValue("<board_id>")).getUpdateSince()
-```
-
-In the image below, you can see the latest value being pushed
-
-<img src="images/9e.png"></img>
   
-## Step 10: Aggregating prices
-
-
-##### Step 10A: Clone and start the simple NodeJS echo server
-
-###### Step 10A1: Make sure Node and NPM are installed
-
-Run the following command.
-
-```bash
-node --version
-```
-
-###### Step 10A2: Clone and start
-Run the following command.
-
-```bash
-git clone https://github.com/jacquesvcritien/nodejs-echo-server.git
-cd nodejs-echo-server
-nohup node server.js
-```
-  
-##### Step 10B: Spin up an additional local-solo node
+## Step 6: Spin up an additional privileged local-solo node
 
 This will give priceAuthorityAdmin permissions to the node
 
@@ -338,170 +117,163 @@ Run the following command in the root directory of the project.
 agoric start --reset local-solo 7999 agoric.priceAuthorityAdmin >& 7999.log &
 ```
   
-##### Step 10C: Create a price authority based on an aggregator
+## Step 7: Create a price authority based on an aggregator
 
 Run the following command in the root directory of the project.
 
 ```bash
-IN_ISSUER_JSON='"BLD"' OUT_ISSUER_JSON='"USD"' \
-agoric deploy api/aggregate.js --hostport=127.0.0.1:7999
+IN_BRAND_LOOKUP='["wallet","brand","BLD"]' \
+OUT_BRAND_LOOKUP='["agoricNames","oracleBrand","USD"]' \
+agoric deploy api/aggregate.js--hostport=127.0.0.1:7999
 ```
 
-##### Step 10D: We have to repeat this for all oracles 
+### Step 8: We have to repeat this for all oracles 
 
-##### Step 10D1: Create Job in the respective chainlink node
+#### Step 8A: Create Bridges in the respective chainlink node
 
-1. Change <b>\<N></b> and log into http://localhost:669\<N> with credentials from Step 6
+1. Change <b>\<N></b> and log into http://localhost:669\<N> with credentials from Step 5
+2. Create the following new bridges from the <b>Bridges</b> tab
+- bridge-nomics 
+- bridge-tiingo
+- bridge-coinmetrics
+
+#### Step 8B: Create Job in the respective chainlink node
+
+1. Change <b>\<N></b> and log into http://localhost:669\<N> with credentials from Step 5
 2. Create the following new job 
-```yaml
-{
-  "initiators": [
-    {
-      "type": "external",
-      "params": {
-        "name": "test-ei",
-        "body": {
-          "endpoint": "agoric-node"
-        }
-      }
-    }
-  ],
-  "tasks": [
-    {
-      "type": "httpgetwithunrestrictednetworkaccess",
-      "confirmations": null,
-      "params": {
-      }
-    },
-    {
-      "type": "jsonparse",
-      "confirmations": null,
-      "params": {
-      }
-    },
-    {
-      "type": "multiply",
-      "confirmations": null,
-      "params": {
-      }
-    },
-    {
-      "type": "agoric",
-      "confirmations": null,
-      "params": {
-      }
-    }
-  ],
-  "startAt": null,
-  "endAt": null
-}
+```toml
+name            = "ATOM-USD"
+type            = "webhook"
+schemaVersion   = 1
+maxTaskDuration = "30s"
+externalInitiators = [
+  { name = "test-ei", spec = "{\"endpoint\":\"agoric-node\"}" },
+]
+observationSource   = """
+    payment [type="jsonparse" data="$(jobRun.requestBody)" path="payment"]
+    request_id [type="jsonparse" data="$(jobRun.requestBody)" path="request_id"]
+
+   // data source 1
+   ds1          [type=bridge name="bridge-nomics" requestData="{\\"data\\": {\\"from\\":\\"ATOM\\",\\"to\\":\\"USD\\"}}"];
+   ds1_parse    [type=jsonparse path="result"];
+   ds1_multiply [type=multiply times=1000000];
+   ds1 -> ds1_parse -> ds1_multiply -> answer;
+
+   // data source 2
+   ds2          [type=bridge name="bridge-coinmetrics" requestData="{\\"data\\": {\\"endpoint\\":\\"crypto\\",\\"from\\":\\"ATOM\\",\\"to\\":\\"USD\\"}}"];
+   ds2_parse    [type=jsonparse path="result"];
+   ds2_multiply [type=multiply times=1000000];
+   ds2 -> ds2_parse -> ds2_multiply -> answer;
+
+   // data source 3
+   ds3          [type=bridge name="bridge-tiingo" requestData="{\\"data\\": {\\"from\\":\\"ATOM\\",\\"to\\":\\"USD\\"}}"];
+   ds3_parse    [type=jsonparse path="result"];
+   ds3_multiply [type=multiply times=1000000];
+   ds3 -> ds3_parse -> ds3_multiply -> answer;
+
+    answer [type=median                      index=0]
+    send_to_bridge [type="bridge" name="agoric" requestData="{ \\"data\\": {\\"result\\": $(answer), \\"request_id\\": $(request_id), \\"payment\\":$(payment) }}"]
+    answer -> payment-> request_id -> send_to_bridge
+"""
 ```
-3. Take note of the job ID
+3. Take note of the external job ID
 
-###### Step 10D2: Change job ID in api/flux-notifier.js
+#### Step 8C: Change job ID in api/flux-notifier.js
 
-You have to edit the <b>api/flux-notifier.js</b> file as follows and change
-1. \<jobID from step 10D1>
-2. \<VM_IP>
-3. \<VALUE> - This should be set to the value you want the job to return
+You have to edit the <b>api/flux-notifier.js</b> file as follows and change \<jobID from step 8B>
 
 ```js
 const PRICE_QUERY = {
-  jobId: '<jobID from step 10D1>',
-  params: {
-    get: 'http://<VM_IP>:3333?value=<VALUE>',
-    path: ['value'],
-    times: 1,
-  },
+  jobId: '<jobID from step 8B>'
 };
 ```
 
-###### Step 10D3: Create a Flux Notifier
-
-Run the following command in the root directory of the project.
-
-1. You have to change N to the number of the oracle, starting from 1.
-2. You have to change AGGREGATOR_INSTANCE_ID from the value returned in Step 10C
-
-```bash
-AGGREGATOR_INSTANCE_ID=<boardId of aggregator instance from step 10C> \
-FEE_ISSUER_JSON='"RUN"' \
-agoric deploy api/flux-notifier.js --hostname=127.0.0.1:689<N>
-```
-  
-###### Step 10D4: Add the oracle's notifier to the aggregator
-
-Run the following command in the root directory of the project.
-
-Add the oracle's notifier to the aggregator.
-
-1. You have to change NOTIFIER_BOARD_ID to the notifier board ID from Step 10D3
-2. You have to change INSTANCE_HANDLE_BOARD_ID to the oracle board ID from Step 8
-
-```bash
-NOTIFIER_BOARD_ID=<boardId of push notifier from Step 10D3> \
-INSTANCE_HANDLE_BOARD_ID=<boardId of oracle instance from Step 8> \
-IN_ISSUER_JSON='"BLD"' OUT_ISSUER_JSON='"USD"' \
-PRICE_DECIMALS=2 \
-agoric deploy api/aggregate.js --hostname=127.0.0.1:7999
-```
-
-##### Step 10E: Query Price Pair
-
-Head to <b>http://<ip_addr>:6891</b> and confirm the output by typing in the following commands.
+The resulting <b>api/flux-notifier.js</b> file should be as follows
 
 ```js
-E(home.agoricNames).lookup('brand', 'BLD').then(brand => bld = brand)
-E(home.agoricNames).lookup('brand', 'USD').then(brand => usd = brand)
-pa = E(home.board).getValue('<boardId of price authority from Step 10B>')
-E(E(pa).makeQuoteNotifier({ value: 1_000n * 10n ** 6n, brand: bld }, usd)).getUpdateSince()
+// These parameters will be different based on what the price aggregator
+// expects.  You may have to edit them!
+
+// What minimum percentage of the price difference should result in a notification?
+export const THRESHOLD = 0.1;
+
+// What minimum absolute change in price should result in a notification?
+export const ABSOLUTE_THRESHOLD = 0;
+
+// How many decimal places does the price need to be shifted by?
+export const PRICE_DECIMALS = 6;
+
+// This is the query submitted to the oracle.
+const PRICE_QUERY = {
+  jobId: '<jobID from step 8B>'
+};
+
+// If no new round is started in this number of seconds, the oracle will initiate a new round.
+export const IDLE_TIMER_PERIOD_S = 10n * 60n;
+
+// This is the number of seconds between each poll.
+export const POLL_TIMER_PERIOD_S = 60n;
+
+// This is sent to the oracle node as the fee amount for the flux monitor
+// query.  It isn't actually a real payment, just something to tell the oracle
+// job that it has permission to run.
+export const FEE_PAYMENT_VALUE = 0n;
 ```
 
-  
-## Step 11: Creating a Price Authority
+### Step 8D: Get the node address
 
-##### Step 11A: Spin up an additional local-solo node
-
-This will give permissions to the node to create a PriceAuthority
-
-Run the following command in the root directory of the project.
+Change \<N> to the oracle number and run the following command
 
 ```bash
-agoric start --reset local-solo 8001 agoric.priceAuthorityAdmin >& 8001.log &
+agoric deploy api/show-my-address.js --hostport=127.0.0.1:689<N>
 ```
 
-##### Step 11B: Create a Price Authority
+### Step 8E: Send an invite to the oracle
 
-Run the following command in the root directory of the project.
-
-<b>You have to replace the <board_id> with the board number of the push notifier from Step 9A</b>
+Change \<address-step-8D> to the address obtained in step 8D and run the following command
 
 ```bash
-NOTIFIER_BOARD_ID="<board_id>" \
-IN_ISSUER_JSON='"RUN"' OUT_ISSUER_JSON='"BLD"' \
-PRICE_DECIMALS=2 \
-agoric deploy --hostport=127.0.0.1:8001 api/priceAuthority/from-notifier.js
+ORACLE_ADDRESS=<address-step-8D> \
+agoric deploy api/invite-oracle.js --hostport=127.0.0.1:7999
 ```
 
-This should return a <b>PRICE_AUTHORITY_BOARD_ID</b> which is used in the next step as can be seen in the image below.
+### Step 8F: Wait for the invitation
 
-<img src="images/10a.png"></img>
+1. Change \<N> to the oracle number and head to http://\<VM-IP>:689\<N>
 
-##### Step 11C: Register Price Authority
+2. You should be able to see the following
 
-Run the following command in the root directory of the project.
+<img src="images/zoe-invite.png"></img>
 
-<b>You have to replace the <price_authority_board_id> with the returned PRICE_AUTHORITY_BOARD_ID from Step 10B</b>
+### Step 8G: Initiate the flux notifier
+
+Change \<N> to the oracle number and run the following command
 
 ```bash
-PRICE_AUTHORITY_BOARD_ID="<price_authority_board_id>" \
-IN_ISSUER_JSON='"RUN"' OUT_ISSUER_JSON='"BLD"' \
-agoric deploy --hostport=127.0.0.1:8001 api/register.js
+AGGREGATOR_INSTANCE_LOOKUP=<from step 7> \
+IN_BRAND_LOOKUP='["wallet","brand","BLD"]' \
+OUT_BRAND_LOOKUP='["agoricNames","oracleBrand","USD"]' \
+FEE_ISSUER_LOOKUP='["wallet","issuer","RUN"]' \
+agoric deploy api/flux-notifier.js --hostport=http://127.0.0.1:689<N>
 ```
 
-##### Step 11D: Query Price Pair
+### Step 8H: Approve the invite
 
-Head to <b>http://<ip_addr>:6891</b> and confirm the output as below.
+1. Change \<N> to the oracle number and head to http://\<VM-IP>:689\<N>
 
+2. You should be able to see the following and press on 'Approve'
 
-<img src="images/10d.png"></img>
+<img src="images/approve.png"></img>
+
+## Step 9: Query prices
+
+```js
+//create instance
+E(home.board).getValue(<instance-board-id>).then(val => instance = value
+//get public faucet
+E(home.zoe).getPublicFacet(instance).then(val => pf = val)
+//get notifier
+E(pf).getRoundCompleteNotifier().then(val => notifier = val)
+//get value
+E(roundNotifier).getUpdateSince()
+```
