@@ -124,7 +124,7 @@ Run the following command in the root directory of the project.
 ```bash
 IN_BRAND_LOOKUP='["wallet","brand","BLD"]' \
 OUT_BRAND_LOOKUP='["agoricNames","oracleBrand","USD"]' \
-agoric deploy api/aggregate.js--hostport=127.0.0.1:7999
+agoric deploy api/aggregate.js --hostport=127.0.0.1:7999
 ```
 
 ### Step 8: We have to repeat this for all oracles 
