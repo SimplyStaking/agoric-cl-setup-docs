@@ -8,13 +8,15 @@ Make sure you have the following requirements before starting:
 1. node (Minimum version 16.17.0)
 2. docker
 3. docker-compose
+4. jq
 
 ## Step 1: Installing Agoric CLI (use master branch)
 
 ``` bash
+cd ~
 node --version # 16.17.0 or higher
 npm install --global yarn
-git clone https://github.com/Agoric/agoric-sdk
+git clone https://github.com/jacquesvcritien/agoric-sdk
 cd agoric-sdk
 yarn install
 yarn build
@@ -30,6 +32,7 @@ agoric --version
 Before the setup, we have to run the following
 
 ```bash
+cd ~
 git clone https://github.com/Agoric/dapp-oracle.git
 cd dapp-oracle
 git checkout main
@@ -50,9 +53,8 @@ agd keys add $WALLET_NAME --keyring-backend=test
 Start a local chain
 
 ```bash
-WALLET_ADDR=$(agd keys show $WALLET_NAME --keyring-backend=test --output=json | jq -r .address)
 cd ~/agoric-sdk/packages/inter-protocol/scripts
-./start-local-chain.sh test $WALLET_ADDR
+./start-local-chain.sh test
 ```
 
 ## Step 5: Accepting the oracle invitation
