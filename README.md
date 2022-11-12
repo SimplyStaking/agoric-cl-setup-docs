@@ -67,14 +67,14 @@ The next step involves accepting the oracle invitation
 WALLET_NAME=test
 ASSET_IN=ATOM
 ASSET_OUT=USD
-cd agoric-sdk/packages/agoric-cl-middleware/scripts
+cd ~/agoric-sdk/packages/agoric-cl-middleware/scripts
 chmod +x accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT
 ```
 
 OR
 
 ```bash
-cd agoric-sdk/packages/agoric-cli
+cd ~/agoric-sdk/packages/agoric-cli
 ORACLE_OFFER=$(mktemp -t agops.XXX)
 bin/agops oracle accept >|"$ORACLE_OFFER"
 jq ".body | fromjson" <"$ORACLE_OFFER"
@@ -89,8 +89,7 @@ echo "ORACLE_OFFER_ID: $ORACLE_OFFER_ID"
 The next step involves running the script found at <b>dapp-oracle/chainlink-agoric/setup</b>.
 
 ```bash
-#run this in the root directory of dapp-oracle
-cd chainlink-agoric
+cd ~/dapp-oracle/chainlink-agoric
 docker-compose pull
 ./setup
 ```
@@ -107,7 +106,7 @@ This setup script does the following:
 To start the middleware, run the following command
 
 ```
-cd agoric-sdk/packages/agoric-cl-middleware/src
+cd ~/agoric-sdk/packages/agoric-cl-middleware/src
 WALLET_ADDR="agoric...."
 FROM=$WALLET_ADDR EI_CHAINLINKURL=http://IP:6691 ./bin-middleware.js
 ```
