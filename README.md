@@ -10,7 +10,7 @@ Make sure you have the following requirements before starting:
 3. docker-compose
 4. jq
 
-## Step 1: Installing Agoric CLI (use master branch)
+## Step 1: Installing Agoric CLI (use smart-wallet branch)
 
 ``` bash
 cd ~
@@ -18,6 +18,7 @@ node --version # 16.17.0 or higher
 npm install --global yarn
 git clone https://github.com/jacquesvcritien/agoric-sdk
 cd agoric-sdk
+git checkout smart-wallet
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -35,7 +36,7 @@ Before the setup, we have to run the following
 cd ~
 git clone https://github.com/jacquesvcritien/dapp-oracle.git
 cd dapp-oracle
-git checkout main
+git checkout smart-wallet
 agoric install
 ```
 
@@ -64,8 +65,10 @@ The next step involves accepting the oracle invitation
 
 ```bash
 WALLET_NAME=test
+ASSET_IN=ATOM
+ASSET_OUT=USD
 cd agoric-sdk/packages/agoric-cl-middleware/scripts
-chmod +x accept-oracle-invitation.sh $WALLET_NAME
+chmod +x accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT
 ```
 
 OR
@@ -99,7 +102,18 @@ This setup script does the following:
 2. Adds the external initiator built inside the middleware to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 3. Adds the external adapter built inside the middleware to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 
-## Step 7: Adding Job to CL node
+## Step 7: Starting the middleware
+
+To start the middleware, run the following command
+
+```
+cd agoric-sdk/packages/agoric-cl-middleware/src
+WALLET_ADDR="agoric...."
+FROM=$WALLET_ADDR EI_CHAINLINKURL=http://IP:6691 ./bin-middleware.js
+```
+
+
+## Step 8: Adding Job to CL node
 
 
 1. Go to http://IP:6691
@@ -108,7 +122,13 @@ This setup script does the following:
 notreal@fakeemail.ch
 twochains
 ```
-3. Add the following job
+3. Add the following 3 bridges
+```
+bridge-nomics
+bridge-coinmetrics
+bridge-tiingo
+```
+4. Add the following job
 ```toml
 name            = "ATOM-USD"
 type            = "webhook"
@@ -143,4 +163,12 @@ observationSource   = """
     send_to_bridge [type="bridge" name="agoric" requestData="{ \\"data\\": {\\"result\\": $(answer), \\"request_id\\": $(request_id), \\"payment\\":$(payment), \\"job\\": $(jobSpec.externalJobID), \\"name\\": $(jobSpec.name) }}"]
     answer -> payment-> request_id -> send_to_bridge
 """
+```
+
+## Step 9: Query updated price
+
+Run the following
+
+```bash
+agd query vstorage data published.priceFeed.ATOM-USD_price_feed
 ```
