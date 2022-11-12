@@ -101,9 +101,8 @@ This setup script does the following:
 
 ## Step 7: Adding Job to CL node
 
-### Step 7A: Log in the chainlink node
 
-1. Go to http://<IP>:6691
+1. Go to http://IP:6691
 2. Log in with the following credentials
 ```
 notreal@fakeemail.ch
