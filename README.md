@@ -33,7 +33,7 @@ Before the setup, we have to run the following
 
 ```bash
 cd ~
-git clone https://github.com/Agoric/dapp-oracle.git
+git clone https://github.com/jacquesvcritien/dapp-oracle.git
 cd dapp-oracle
 git checkout main
 agoric install
@@ -53,13 +53,22 @@ agd keys add $WALLET_NAME --keyring-backend=test
 Start a local chain
 
 ```bash
+WALLET_NAME=test
 cd ~/agoric-sdk/packages/inter-protocol/scripts
-./start-local-chain.sh test
+./start-local-chain.sh WALLET_NAME
 ```
 
 ## Step 5: Accepting the oracle invitation
 
 The next step involves accepting the oracle invitation
+
+```bash
+WALLET_NAME=test
+cd agoric-sdk/packages/agoric-cl-middleware/scripts
+chmod +x accept-oracle-invitation.sh $WALLET_NAME
+```
+
+OR
 
 ```bash
 cd agoric-sdk/packages/agoric-cli
@@ -89,3 +98,50 @@ This setup script does the following:
     - Chainlink Node
 2. Adds the external initiator built inside the middleware to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 3. Adds the external adapter built inside the middleware to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
+
+## Step 7: Adding Job to CL node
+
+### Step 7A: Log in the chainlink node
+
+1. Go to http://<IP>:6691
+2. Log in with the following credentials
+```
+notreal@fakeemail.ch
+twochains
+```
+3. Add the following job
+```toml
+name            = "ATOM-USD"
+type            = "webhook"
+schemaVersion   = 1
+maxTaskDuration = "30s"
+externalInitiators = [
+  { name = "test-ei", spec = "{\"endpoint\":\"agoric-node\", \"name\":\"ATOM-USD\"}" },
+]
+observationSource   = """
+    payment [type="jsonparse" data="$(jobRun.requestBody)" path="payment"]
+    request_id [type="jsonparse" data="$(jobRun.requestBody)" path="request_id"]
+
+   // data source 1
+   ds1          [type=bridge name="bridge-nomics" requestData="{\\"data\\": {\\"from\\":\\"ATOM\\",\\"to\\":\\"USD\\"}}"];
+   ds1_parse    [type=jsonparse path="result"];
+   ds1_multiply [type=multiply times=1000000];
+   ds1 -> ds1_parse -> ds1_multiply -> answer;
+
+   // data source 2
+   ds2          [type=bridge name="bridge-coinmetrics" requestData="{\\"data\\": {\\"endpoint\\":\\"crypto\\",\\"from\\":\\"ATOM\\",\\"to\\":\\"USD\\"}}"];
+   ds2_parse    [type=jsonparse path="result"];
+   ds2_multiply [type=multiply times=1000000];
+   ds2 -> ds2_parse -> ds2_multiply -> answer;
+
+   // data source 3
+   ds3          [type=bridge name="bridge-tiingo" requestData="{\\"data\\": {\\"from\\":\\"ATOM\\",\\"to\\":\\"USD\\"}}"];
+   ds3_parse    [type=jsonparse path="result"];
+   ds3_multiply [type=multiply times=1000000];
+   ds3 -> ds3_parse -> ds3_multiply -> answer;
+
+    answer [type=median                      index=0]
+    send_to_bridge [type="bridge" name="agoric" requestData="{ \\"data\\": {\\"result\\": $(answer), \\"request_id\\": $(request_id), \\"payment\\":$(payment), \\"job\\": $(jobSpec.externalJobID), \\"name\\": $(jobSpec.name) }}"]
+    answer -> payment-> request_id -> send_to_bridge
+"""
+```
