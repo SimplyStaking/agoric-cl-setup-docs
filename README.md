@@ -68,7 +68,7 @@ WALLET_NAME=test
 ASSET_IN=ATOM
 ASSET_OUT=USD
 cd ~/agoric-sdk/packages/agoric-cl-middleware/scripts
-chmod +x accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT
+./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT
 ```
 
 OR
