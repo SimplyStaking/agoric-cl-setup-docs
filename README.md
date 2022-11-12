@@ -10,7 +10,7 @@ Make sure you have the following requirements before starting:
 3. docker-compose
 4. jq
 
-## Step 1: Installing Agoric CLI (use smart-wallet branch)
+## Step 1: Installing Agoric CLI (use smart-wallet-local branch)
 
 ``` bash
 cd ~
@@ -18,7 +18,7 @@ node --version # 16.17.0 or higher
 npm install --global yarn
 git clone https://github.com/jacquesvcritien/agoric-sdk
 cd agoric-sdk
-git checkout smart-wallet
+git checkout smart-wallet-local
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -36,7 +36,7 @@ Before the setup, we have to run the following
 cd ~
 git clone https://github.com/jacquesvcritien/dapp-oracle.git
 cd dapp-oracle
-git checkout smart-wallet
+git checkout smart-wallet-local
 agoric install
 ```
 
