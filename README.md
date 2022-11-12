@@ -56,7 +56,7 @@ Start a local chain
 ```bash
 WALLET_NAME=test
 cd ~/agoric-sdk/packages/inter-protocol/scripts
-./start-local-chain.sh WALLET_NAME
+./start-local-chain.sh $WALLET_NAME
 ```
 
 ## Step 5: Accepting the oracle invitation
