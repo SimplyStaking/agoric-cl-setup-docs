@@ -54,37 +54,33 @@ agd keys add $WALLET_NAME --keyring-backend=test
 Start a local chain
 
 ```bash
-WALLET_NAME=test
 cd ~/agoric-sdk/packages/inter-protocol/scripts
 ./start-local-chain.sh $WALLET_NAME
 ```
 
-## Step 5: Accepting the oracle invitation
+## Step 5: Clone the middleware's repository
+
+Clone the repository containing the code for the middleware
+
+```bash
+cd ~
+git clone https://github.com/jacquesvcritien/agoric-cl-middleware.git
+cd agoric-cl-middleware
+yarn install
+```
+
+## Step 6: Accepting the oracle invitation
 
 The next step involves accepting the oracle invitation
 
 ```bash
-WALLET_NAME=test
 ASSET_IN=ATOM
 ASSET_OUT=USD
-cd ~/agoric-sdk/packages/agoric-cl-middleware/scripts
+cd ~/agoric-cl-middleware/scripts
 ./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT
 ```
 
-OR
-
-```bash
-cd ~/agoric-sdk/packages/agoric-cli
-ORACLE_OFFER=$(mktemp -t agops.XXX)
-bin/agops oracle accept >|"$ORACLE_OFFER"
-jq ".body | fromjson" <"$ORACLE_OFFER"
-bin/agoric wallet send --from "$WALLET_ADDR" --keyring-backend test --offer "$ORACLE_OFFER"
-bin/agoric wallet show --from "$WALLET_ADDR"
-ORACLE_OFFER_ID=$(jq ".body | fromjson | .offer.id" <"$ORACLE_OFFER")
-echo "ORACLE_OFFER_ID: $ORACLE_OFFER_ID"
-```
-
-## Step 6: Run setup script
+## Step 7: Run setup script
 
 The next step involves running the script found at <b>dapp-oracle/chainlink-agoric/setup</b>.
 
@@ -101,14 +97,23 @@ This setup script does the following:
 2. Adds the external initiator built inside the middleware to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 3. Adds the external adapter built inside the middleware to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 
-## Step 7: Starting the middleware
+## Step 8: Starting the middleware
 
-To start the middleware, run the following command
+To start the middleware, run the following commands
 
 ```
-cd ~/agoric-sdk/packages/agoric-cl-middleware/src
-WALLET_ADDR="agoric...."
-FROM=$WALLET_ADDR EI_CHAINLINKURL=http://IP:6691 ./bin-middleware.js
+cd ~/agoric-cl-middleware
+THIS_VM_IP=$(hostname -I | sed 's/ *$//g')
+THIS_VM_IP=$(echo ${THIS_VM_IP%% *})
+WALLET_ADDR=$(agd keys show "$WALLET_NAME" --keyring-backend test --output json | jq -r .address)
+echo "THIS_VM_IP=$THIS_VM_IP" > .env
+echo "WALLET_ADDR=$WALLET_ADDR" >> .env
+
+#build the images
+docker build --tag ag-oracle-middleware -f Dockerfile.middleware .
+docker build --tag ag-oracle-monitor -f Dockerfile.monitor .
+
+docker-compose up -d
 ```
 
 
