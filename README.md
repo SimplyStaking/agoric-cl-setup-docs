@@ -117,7 +117,7 @@ docker-compose up -d
 ```
 
 
-## Step 8: Adding Job to CL node
+## Step 9: Adding Job to CL node
 
 
 1. Go to http://IP:6691
@@ -169,7 +169,7 @@ observationSource   = """
 """
 ```
 
-## Step 9: Query updated price
+## Step 10: Query updated price
 
 Run the following
 
