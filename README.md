@@ -26,6 +26,7 @@ cd packages/cosmic-swingset && make
 echo "export PATH=$PATH:$HOME/bin" >> ~/.profile
 source ~/.profile
 agoric --version
+agd --version
 ```
 
 ## Step 2: Clone dapp-oracle and install dependencies
@@ -40,23 +41,26 @@ git checkout smart-wallet-local
 agoric install
 ```
 
-## Step 3: Create a key
+## Step 3: Create a key and send the address to the chain management team
 
-Create an agoric key
+1. Create an agoric key
 
-```
+```bash
 WALLET_NAME=test
 agd keys add $WALLET_NAME --keyring-backend=test
 ```
 
-## Step 4: Start a local chain
-
-Start a local chain
+2. Get the address
 
 ```bash
-cd ~/agoric-sdk/packages/inter-protocol/scripts
-./start-local-chain.sh $WALLET_NAME
+WALLET_ADDR=$(agd keys show "$WALLET_NAME" --keyring-backend test --output json | jq -r .address)
+echo "Address: $WALLET_ADDR"
 ```
+
+3. Send the address to the oracle team
+
+## Step 4: Start a node
+
 
 ## Step 5: Clone the middleware's repository
 
