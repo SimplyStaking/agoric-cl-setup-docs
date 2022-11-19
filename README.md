@@ -65,6 +65,7 @@ echo "Address: $WALLET_ADDR"
 
 ```bash
 cd ~
+https://github.com/jacquesvcritien/agoric-chainlink-setup-docs/raw/smart-wallet-local/images/agpopup.png
 wget https://github.com/jacquesvcritien/agoric-chainlink-setup-docs/
 tar xvf node.tar.gz
 ```
@@ -91,7 +92,7 @@ EOF
 3. Start node
 
 ```bash
-systemctl start node
+systemctl start agoric-node
 ```
 
 4. Check if the node is still catching up
