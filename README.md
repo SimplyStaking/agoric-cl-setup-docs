@@ -26,7 +26,7 @@ cd packages/cosmic-swingset && make
 echo "export PATH=$PATH:$HOME/bin" >> ~/.profile
 source ~/.profile
 agoric --version
-agd --version
+agd version
 ```
 
 ## Step 2: Clone dapp-oracle and install dependencies
@@ -61,8 +61,65 @@ echo "Address: $WALLET_ADDR"
 
 ## Step 4: Start a node
 
+1. Download data
 
-## Step 5: Clone the middleware's repository
+```bash
+cd ~
+wget https://github.com/jacquesvcritien/agoric-chainlink-setup-docs/
+tar xvf node.tar.gz
+```
+
+2. Create a service file
+
+```bash
+tee /etc/systemd/system/agoric-node.service > /dev/null <<EOF  
+[Unit]
+Description     = agoric node service
+Wants           = network-online.target beacon-chain.service
+After           = network-online.target 
+
+[Service]
+User            = $USER
+ExecStart       = $HOME/go/bin/agd start --log_level=info --home $HOME/agoric-node-home
+Restart         = always
+
+[Install]
+WantedBy= multi-user.target
+EOF
+```
+
+3. Start node
+
+```bash
+systemctl start node
+```
+
+4. Check if the node is still catching up
+
+```bash
+echo $(agd status) | jq ".SyncInfo.catching_up"
+```
+
+## Step 5: Provision the smart wallet
+
+Once the node is synced, you need to provision the smart wallet
+
+1. Provision the smart wallet
+
+```bash
+cd ~/agoric-sdk/packages/cosmic-swingset
+WALLET_ADDR=$(agd keys show "$WALLET_NAME" --keyring-backend test --output json | jq -r .address)
+make ACCT_ADDR="$WALLET_BECH32" FUNDS=20000000ubld,20000000ibc/usdc1234,500000uist fund-acct
+agoric wallet provision --spend --account "$WALLET_ADDR" --keyring-backend test
+```
+
+2. Confirm the smart wallet provision
+
+```bash
+agoric wallet show --from "$WALLET_ADDR"
+```
+
+## Step 6: Clone the middleware's repository
 
 Clone the repository containing the code for the middleware
 
