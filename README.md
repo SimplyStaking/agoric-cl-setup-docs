@@ -209,6 +209,7 @@ externalInitiators = [
 observationSource   = """
     payment [type="jsonparse" data="$(jobRun.requestBody)" path="payment"]
     request_id [type="jsonparse" data="$(jobRun.requestBody)" path="request_id"]
+    request_type [type="jsonparse" data="$(jobRun.requestBody)" path="request_type"]
 
    // data source 1
    ds1          [type=bridge name="bridge-nomics" requestData="{\\"data\\": {\\"from\\":\\"ATOM\\",\\"to\\":\\"USD\\"}}"];
@@ -229,7 +230,7 @@ observationSource   = """
    ds3 -> ds3_parse -> ds3_multiply -> answer;
 
     answer [type=median                      index=0]
-    send_to_bridge [type="bridge" name="agoric" requestData="{ \\"data\\": {\\"result\\": $(answer), \\"request_id\\": $(request_id), \\"payment\\":$(payment), \\"job\\": $(jobSpec.externalJobID), \\"name\\": $(jobSpec.name) }}"]
+    send_to_bridge [type="bridge" name="agoric" requestData="{ \\"data\\": {\\"result\\": $(answer), \\"request_id\\": $(request_id), \\"request_type\\": $(request_type), \\"payment\\":$(payment), \\"job\\": $(jobSpec.externalJobID), \\"name\\": $(jobSpec.name) }}"]
     answer -> payment-> request_id -> send_to_bridge
 """
 ```
