@@ -65,9 +65,8 @@ echo "Address: $WALLET_ADDR"
 
 ```bash
 cd ~
-https://github.com/jacquesvcritien/agoric-chainlink-setup-docs/raw/smart-wallet-local/images/agpopup.png
-wget https://github.com/jacquesvcritien/agoric-chainlink-setup-docs/
-tar xvf node.tar.gz
+wget http://vm_ip:8000/testnet.tar.gz
+tar xvf testnet.tar.gz
 ```
 
 2. Create a service file
@@ -92,6 +91,7 @@ EOF
 3. Start node
 
 ```bash
+systemctl daemon-reload
 systemctl start agoric-node
 ```
 
@@ -101,6 +101,8 @@ systemctl start agoric-node
 echo $(agd status) | jq ".SyncInfo.catching_up"
 ```
 
+<b>Make sure the above is FALSE before going to the next step</b>
+
 ## Step 5: Provision the smart wallet
 
 Once the node is synced, you need to provision the smart wallet
@@ -108,8 +110,9 @@ Once the node is synced, you need to provision the smart wallet
 1. Provision the smart wallet
 
 ```bash
-cd ~/agoric-sdk/packages/cosmic-swingset
+WALLET_NAME=test
 WALLET_ADDR=$(agd keys show "$WALLET_NAME" --keyring-backend test --output json | jq -r .address)
+cd ~/agoric-sdk/packages/cosmic-swingset
 make ACCT_ADDR="$WALLET_BECH32" FUNDS=20000000ubld,20000000ibc/usdc1234,500000uist fund-acct
 agoric wallet provision --spend --account "$WALLET_ADDR" --keyring-backend test
 ```
