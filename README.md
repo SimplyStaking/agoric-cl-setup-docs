@@ -113,7 +113,6 @@ Once the node is synced, you need to provision the smart wallet
 WALLET_NAME=test
 WALLET_ADDR=$(agd keys show "$WALLET_NAME" --keyring-backend test --output json | jq -r .address)
 cd ~/agoric-sdk/packages/cosmic-swingset
-make ACCT_ADDR="$WALLET_ADDR" FUNDS=20000000ubld,20000000ibc/usdc1234,500000uist fund-acct
 agoric wallet provision --spend --account "$WALLET_ADDR" --keyring-backend test
 ```
 
