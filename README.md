@@ -173,6 +173,11 @@ WALLET_ADDR=$(agd keys show "$WALLET_NAME" --keyring-backend test --output json 
 echo "THIS_VM_IP=$THIS_VM_IP" > .env
 echo "WALLET_ADDR=$WALLET_ADDR" >> .env
 
+#create config
+mkdir -p ~/config
+ORACLE_NAME="ORACLE1"
+echo "{ \"WALLET_ADDR\" : { \"oracleName\": \"$ORACLE_NAME\" }}" > ~/config/oracles.json
+
 #build the images
 docker build --tag ag-oracle-middleware -f Dockerfile.middleware .
 docker build --tag ag-oracle-monitor -f Dockerfile.monitor .
