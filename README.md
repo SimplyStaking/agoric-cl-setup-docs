@@ -72,7 +72,7 @@ tar xvf testnet.tar.gz
 2. Create a service file
 
 ```bash
-tee /etc/systemd/system/agoric-node.service > /dev/null <<EOF  
+sudo tee /etc/systemd/system/agoric-node.service > /dev/null <<EOF  
 [Unit]
 Description     = agoric node service
 Wants           = network-online.target beacon-chain.service
