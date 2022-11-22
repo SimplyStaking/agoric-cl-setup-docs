@@ -133,7 +133,7 @@ cd agoric-cl-middleware
 yarn install
 ```
 
-## Step 6: Accepting the oracle invitation
+## Step 7: Accepting the oracle invitation
 
 The next step involves accepting the oracle invitation
 
@@ -144,7 +144,7 @@ cd ~/agoric-cl-middleware/scripts
 ./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT
 ```
 
-## Step 7: Run setup script
+## Step 8: Run setup script
 
 The next step involves running the script found at <b>dapp-oracle/chainlink-agoric/setup</b>.
 
@@ -161,7 +161,7 @@ This setup script does the following:
 2. Adds the external initiator built inside the middleware to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 3. Adds the external adapter built inside the middleware to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 
-## Step 8: Starting the middleware
+## Step 9: Starting the middleware
 
 To start the middleware, run the following commands
 
@@ -181,7 +181,7 @@ docker-compose up -d
 ```
 
 
-## Step 9: Adding Job to CL node
+## Step 10: Adding Job to CL node
 
 
 1. Go to http://IP:6691
@@ -234,7 +234,7 @@ observationSource   = """
 """
 ```
 
-## Step 10: Query updated price
+## Step 11: Query updated price
 
 Run the following
 
