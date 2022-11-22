@@ -144,7 +144,23 @@ cd ~/agoric-cl-middleware/scripts
 ./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT
 ```
 
-## Step 8: Run setup script
+## Step 8: Prepare configs for middleware and monitoring tool
+
+```bash
+cd ~/agoric-cl-middleware
+THIS_VM_IP=$(hostname -I | sed 's/ *$//g')
+THIS_VM_IP=$(echo ${THIS_VM_IP%% *})
+WALLET_ADDR=$(agd keys show "$WALLET_NAME" --keyring-backend test --output json | jq -r .address)
+echo "THIS_VM_IP=$THIS_VM_IP" > .env
+echo "WALLET_ADDR=$WALLET_ADDR" >> .env
+
+#create config
+mkdir -p ~/config
+ORACLE_NAME="ORACLE1"
+echo "{ \"$WALLET_ADDR\" : { \"oracleName\": \"$ORACLE_NAME\" }}" > ~/config/oracles.json
+```
+
+## Step 9: Run setup script
 
 The next step involves running the script found at <b>dapp-oracle/chainlink-agoric/setup</b>.
 
@@ -161,23 +177,11 @@ This setup script does the following:
 2. Adds the external initiator built inside the middleware to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 3. Adds the external adapter built inside the middleware to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 
-## Step 9: Starting the middleware
+## Step 10: Starting the middleware
 
 To start the middleware, run the following commands
 
 ```
-cd ~/agoric-cl-middleware
-THIS_VM_IP=$(hostname -I | sed 's/ *$//g')
-THIS_VM_IP=$(echo ${THIS_VM_IP%% *})
-WALLET_ADDR=$(agd keys show "$WALLET_NAME" --keyring-backend test --output json | jq -r .address)
-echo "THIS_VM_IP=$THIS_VM_IP" > .env
-echo "WALLET_ADDR=$WALLET_ADDR" >> .env
-
-#create config
-mkdir -p ~/config
-ORACLE_NAME="ORACLE1"
-echo "{ \"WALLET_ADDR\" : { \"oracleName\": \"$ORACLE_NAME\" }}" > ~/config/oracles.json
-
 #build the images
 docker build --tag ag-oracle-middleware -f Dockerfile.middleware .
 docker build --tag ag-oracle-monitor -f Dockerfile.monitor .
@@ -186,7 +190,7 @@ docker-compose up -d
 ```
 
 
-## Step 10: Adding Job to CL node
+## Step 11: Adding Job to CL node
 
 
 1. Go to http://IP:6691
@@ -239,7 +243,7 @@ observationSource   = """
 """
 ```
 
-## Step 11: Query updated price
+## Step 12: Query updated price
 
 Run the following
 
