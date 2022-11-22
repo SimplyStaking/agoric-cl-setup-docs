@@ -182,6 +182,8 @@ This setup script does the following:
 To start the middleware, run the following commands
 
 ```
+cd ~/agoric-cl-middleware
+
 #build the images
 docker build --tag ag-oracle-middleware -f Dockerfile.middleware .
 docker build --tag ag-oracle-monitor -f Dockerfile.monitor .
