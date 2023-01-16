@@ -10,15 +10,14 @@ Make sure you have the following requirements before starting:
 3. docker-compose
 4. jq
 
-## Step 1: Installing Agoric CLI (use smart-wallet-local branch)
+## Step 1: Installing Agoric CLI
 
 ``` bash
 cd ~
 node --version # 16.17.0 or higher
 npm install --global yarn
-git clone https://github.com/jacquesvcritien/agoric-sdk
+git clone https://github.com/agoric/agoric-sdk
 cd agoric-sdk
-git checkout smart-wallet-local
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -37,13 +36,26 @@ Before the setup, we have to run the following
 cd ~
 git clone https://github.com/jacquesvcritien/dapp-oracle.git
 cd dapp-oracle
-git checkout smart-wallet-local
+git checkout testnet-1
 agoric install
 ```
 
-## Step 3: Create a key and send the address to the chain management team
+## Step 3: Clone the middleware's repository
+
+Clone the repository containing the code for the middleware
+
+```bash
+cd ~
+git clone https://github.com/jacquesvcritien/agoric-cl-middleware.git
+cd agoric-cl-middleware
+yarn install
+```
+
+## Step 4: Create a key and send the address to the chain management team
 
 1. Create an agoric key
+
+REPLACE WALLET_NAME WITH YOUR PREFERRED NAME
 
 ```bash
 WALLET_NAME=test
@@ -59,14 +71,14 @@ echo "Address: $WALLET_ADDR"
 
 3. Send the address to the oracle team
 
-## Step 4: Start a node
+## Step 5: Start a node
 
 1. Download data
 
 ```bash
 cd ~
-wget http://vm_ip:8000/testnet.tar.gz
-tar xvf testnet.tar.gz
+wget http://vm_ip:8000/snapshot.tar.gz
+tar -xvf snapshot.tar.gz
 ```
 
 2. Create a service file
@@ -80,7 +92,8 @@ After           = network-online.target
 
 [Service]
 User            = $USER
-ExecStart       = $HOME/go/bin/agd start --log_level=info --home $HOME/agoric-node-home
+Environment="DEBUG=SwingSet:ls,SwingSet:vat"
+ExecStart       = /home/agoric/go/bin/agd start --log_level=info --home /home/$USER/agoric-node-home --log_level=warn
 Restart         = always
 
 [Install]
@@ -103,17 +116,18 @@ echo $(agd status) | jq ".SyncInfo.catching_up"
 
 <b>Make sure the above is FALSE before going to the next step</b>
 
-## Step 5: Provision the smart wallet
+## Step 6: Provision the smart wallet
 
 Once the node is synced, you need to provision the smart wallet
 
 1. Provision the smart wallet
 
+REPLACE WALLET_NAME WITH THE CHOSEN NAME IN STEP 4.1
+
 ```bash
+cd ~/agoric-cl-middleware
 WALLET_NAME=test
-WALLET_ADDR=$(agd keys show "$WALLET_NAME" --keyring-backend test --output json | jq -r .address)
-cd ~/agoric-sdk/packages/cosmic-swingset
-agoric wallet provision --spend --account "$WALLET_ADDR" --keyring-backend test
+./scripts/provision-wallet.sh $WALLET_NAME
 ```
 
 2. Confirm the smart wallet provision
@@ -121,23 +135,16 @@ agoric wallet provision --spend --account "$WALLET_ADDR" --keyring-backend test
 ```bash
 agoric wallet show --from "$WALLET_ADDR"
 ```
+## Step 7: Wait a minute or two to ensure that the provisioning is finished
 
-## Step 6: Clone the middleware's repository
-
-Clone the repository containing the code for the middleware
-
-```bash
-cd ~
-git clone https://github.com/jacquesvcritien/agoric-cl-middleware.git
-cd agoric-cl-middleware
-yarn install
-```
-
-## Step 7: Accepting the oracle invitation
+## Step 8: Accepting the oracle invitation
 
 The next step involves accepting the oracle invitation
 
+REPLACE WALLET_NAME WITH THE CHOSEN NAME IN STEP 4.1
+
 ```bash
+WALLET_NAME=test
 ASSET_IN=ATOM
 ASSET_OUT=USD
 cd ~/agoric-cl-middleware/scripts
@@ -145,6 +152,8 @@ cd ~/agoric-cl-middleware/scripts
 ```
 
 ## Step 8: Prepare configs for middleware and monitoring tool
+
+REPLACE ORACLE_NAME WITH YOUR PREFERRED NAME
 
 ```bash
 cd ~/agoric-cl-middleware
@@ -201,54 +210,12 @@ docker-compose up -d
 notreal@fakeemail.ch
 twochains
 ```
-3. Add the following 3 bridges
-```
-bridge-nomics
-bridge-coinmetrics
-bridge-tiingo
-```
-4. Add the following job
-```toml
-name            = "ATOM-USD"
-type            = "webhook"
-schemaVersion   = 1
-maxTaskDuration = "30s"
-externalInitiators = [
-  { name = "test-ei", spec = "{\"endpoint\":\"agoric-node\", \"name\":\"ATOM-USD\"}" },
-]
-observationSource   = """
-    payment [type="jsonparse" data="$(jobRun.requestBody)" path="payment"]
-    request_id [type="jsonparse" data="$(jobRun.requestBody)" path="request_id"]
-    request_type [type="jsonparse" data="$(jobRun.requestBody)" path="request_type"]
-
-   // data source 1
-   ds1          [type=bridge name="bridge-nomics" requestData="{\\"data\\": {\\"from\\":\\"ATOM\\",\\"to\\":\\"USD\\"}}"];
-   ds1_parse    [type=jsonparse path="result"];
-   ds1_multiply [type=multiply times=1000000];
-   ds1 -> ds1_parse -> ds1_multiply -> answer;
-
-   // data source 2
-   ds2          [type=bridge name="bridge-coinmetrics" requestData="{\\"data\\": {\\"endpoint\\":\\"crypto\\",\\"from\\":\\"ATOM\\",\\"to\\":\\"USD\\"}}"];
-   ds2_parse    [type=jsonparse path="result"];
-   ds2_multiply [type=multiply times=1000000];
-   ds2 -> ds2_parse -> ds2_multiply -> answer;
-
-   // data source 3
-   ds3          [type=bridge name="bridge-tiingo" requestData="{\\"data\\": {\\"from\\":\\"ATOM\\",\\"to\\":\\"USD\\"}}"];
-   ds3_parse    [type=jsonparse path="result"];
-   ds3_multiply [type=multiply times=1000000];
-   ds3 -> ds3_parse -> ds3_multiply -> answer;
-
-    answer [type=median                      index=0]
-    send_to_bridge [type="bridge" name="agoric" requestData="{ \\"data\\": {\\"result\\": $(answer), \\"request_id\\": $(request_id), \\"request_type\\": $(request_type), \\"payment\\":$(payment), \\"job\\": $(jobSpec.externalJobID), \\"name\\": $(jobSpec.name) }}"]
-    answer -> payment-> request_id -> send_to_bridge
-"""
-```
+3. Add the required bridges and job spec given out by the Simply Staking team
 
 ## Step 12: Query updated price
 
 Run the following
 
 ```bash
-agd query vstorage data published.priceFeed.ATOM-USD_price_feed
+agoric follow :published.priceFeed.ATOM-USD_price_feed
 ```
