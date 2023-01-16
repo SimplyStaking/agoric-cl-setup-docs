@@ -77,7 +77,7 @@ echo "Address: $WALLET_ADDR"
 
 ```bash
 cd ~
-wget http://vm_ip:8000/snapshot.tar.gz
+wget https://agoric-oracle-snapshot.simplystaking.xyz/snapshot.tar.gz
 tar -xvf snapshot.tar.gz
 ```
 
