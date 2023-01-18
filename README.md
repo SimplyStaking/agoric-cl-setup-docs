@@ -151,7 +151,21 @@ cd ~/agoric-cl-middleware/scripts
 ./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT
 ```
 
-## Step 9: Prepare configs for middleware and monitoring tool
+## Step 9: Confirm acceptance
+
+This step involves confirming that the oracle invitation was accepted in the previous step.
+
+In order to do this, change $WALLET_NAME to the your wallet name and run the following command
+
+```bash
+agoric wallet show --from $(agd keys show $WALLET_NAME --keyring-backend test --output json | jq -r .address)
+```
+
+Then, under <b>offerStatuses</b>, make sure you have an accepted oracle invitation as can be seen in the image below. <b>numWantsSatisfied: 1</b> indicates that the oracle invitation was accepted successfully.
+
+<img src="images/oracle_inv.png">
+
+## Step 10: Prepare configs for middleware and monitoring tool
 
 REPLACE ORACLE_NAME WITH YOUR PREFERRED NAME
 
@@ -169,7 +183,7 @@ ORACLE_NAME="ORACLE1"
 echo "{ \"$WALLET_ADDR\" : { \"oracleName\": \"$ORACLE_NAME\" }}" > ~/config/oracles.json
 ```
 
-## Step 10: Run setup script
+## Step 11: Run setup script
 
 The next step involves running the script found at <b>dapp-oracle/chainlink-agoric/setup</b>.
 
@@ -186,7 +200,7 @@ This setup script does the following:
 2. Adds the external initiator built inside the middleware to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 3. Adds the external adapter built inside the middleware to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 
-## Step 11: Starting the middleware
+## Step 12: Starting the middleware
 
 To start the middleware, run the following commands
 
@@ -201,7 +215,7 @@ docker-compose up -d
 ```
 
 
-## Step 12: Adding Job to CL node
+## Step 13: Adding Job to CL node
 
 
 1. Go to http://IP:6691
@@ -212,7 +226,7 @@ twochains
 ```
 3. Add the required bridges and job spec given out by the Simply Staking team
 
-## Step 13: Query updated price
+## Step 14: Query updated price
 
 Run the following
 
