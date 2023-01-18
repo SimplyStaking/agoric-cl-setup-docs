@@ -5,7 +5,7 @@ This is a step-by-step guide explaining how to set up a Chainlink node and an or
 ## Requirements
 
 Make sure you have the following requirements before starting:
-1. node (Minimum version 16.17.0)
+1. node (Use version 16.17.0)
 2. docker
 3. docker-compose
 4. jq
@@ -15,7 +15,7 @@ Make sure you have the following requirements before starting:
 ``` bash
 cd ~
 node --version # 16.17.0 or higher
-npm install --global yarn
+sudo npm install --global yarn
 git clone https://github.com/agoric/agoric-sdk
 cd agoric-sdk
 yarn install
@@ -151,7 +151,7 @@ cd ~/agoric-cl-middleware/scripts
 ./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT
 ```
 
-## Step 8: Prepare configs for middleware and monitoring tool
+## Step 9: Prepare configs for middleware and monitoring tool
 
 REPLACE ORACLE_NAME WITH YOUR PREFERRED NAME
 
@@ -169,7 +169,7 @@ ORACLE_NAME="ORACLE1"
 echo "{ \"$WALLET_ADDR\" : { \"oracleName\": \"$ORACLE_NAME\" }}" > ~/config/oracles.json
 ```
 
-## Step 9: Run setup script
+## Step 10: Run setup script
 
 The next step involves running the script found at <b>dapp-oracle/chainlink-agoric/setup</b>.
 
@@ -186,7 +186,7 @@ This setup script does the following:
 2. Adds the external initiator built inside the middleware to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 3. Adds the external adapter built inside the middleware to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 
-## Step 10: Starting the middleware
+## Step 11: Starting the middleware
 
 To start the middleware, run the following commands
 
@@ -201,7 +201,7 @@ docker-compose up -d
 ```
 
 
-## Step 11: Adding Job to CL node
+## Step 12: Adding Job to CL node
 
 
 1. Go to http://IP:6691
@@ -212,7 +212,7 @@ twochains
 ```
 3. Add the required bridges and job spec given out by the Simply Staking team
 
-## Step 12: Query updated price
+## Step 13: Query updated price
 
 Run the following
 
