@@ -177,3 +177,20 @@ Run the following
 ```bash
 agd query vstorage data published.priceFeed.ATOM-USD_price_feed
 ```
+
+# How to update
+
+Run the following
+
+```
+cd ~/agoric-cl-middleware
+
+#pull latest changes
+git pull
+
+#build the images
+docker build --tag ag-oracle-middleware -f Dockerfile.middleware .
+docker build --tag ag-oracle-monitor -f Dockerfile.monitor .
+
+docker-compose up -d
+```
