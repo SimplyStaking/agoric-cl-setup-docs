@@ -18,6 +18,7 @@ node --version # 16.17.0 or higher
 sudo npm install --global yarn
 git clone https://github.com/agoric/agoric-sdk
 cd agoric-sdk
+git checkout bfbb808fa9f4151844516ef0ca8af1a8b6bf98ae
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
