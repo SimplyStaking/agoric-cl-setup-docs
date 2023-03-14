@@ -47,7 +47,7 @@ Clone the repository containing the code for the middleware
 
 ```bash
 cd ~
-git clone https://github.com/jacquesvcritien/agoric-cl-middleware.git
+git clone https://github.com/SimplyVC/agoric-cl-middleware.git
 cd agoric-cl-middleware
 yarn install
 ```
