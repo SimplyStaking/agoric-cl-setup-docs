@@ -18,7 +18,7 @@ node --version # 16.17.0 or higher
 sudo npm install --global yarn
 git clone https://github.com/agoric/agoric-sdk
 cd agoric-sdk
-git checkout bfbb808fa9f4151844516ef0ca8af1a8b6bf98ae
+git checkout 088b0abf214839326958b9c1109b2d50136636e4
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -74,15 +74,8 @@ echo "Address: $WALLET_ADDR"
 
 ## Step 5: Start a node
 
-1. Download data
 
-```bash
-cd ~
-wget https://agoric-oracle-snapshot.simplystaking.xyz/snapshot.tar.gz
-tar -xvf snapshot.tar.gz
-```
-
-2. Create a service file
+1. Create a service file
 
 ```bash
 sudo tee /etc/systemd/system/agoric-node.service > /dev/null <<EOF  
@@ -94,7 +87,7 @@ After           = network-online.target
 [Service]
 User            = $USER
 Environment="DEBUG=SwingSet:ls,SwingSet:vat"
-ExecStart       = /home/agoric/go/bin/agd start --log_level=info --home /home/$USER/agoric-node-home --log_level=warn
+ExecStart       = /home/agoric/go/bin/agd start --log_level=info --home /home/$USER/.agoric --log_level=warn
 Restart         = always
 
 [Install]
@@ -102,14 +95,14 @@ WantedBy= multi-user.target
 EOF
 ```
 
-3. Start node
+2. Start node
 
 ```bash
 systemctl daemon-reload
 systemctl start agoric-node
 ```
 
-4. Check if the node is still catching up
+3. Check if the node is still catching up
 
 ```bash
 echo $(agd status) | jq ".SyncInfo.catching_up"
