@@ -123,13 +123,8 @@ Once the node is synced, you need to provision the smart wallet
 
 1. Provision the smart wallet
 
-REPLACE WALLET_NAME WITH THE CHOSEN NAME IN STEP 4.1
-
-```bash
-cd ~/agoric-cl-middleware
-WALLET_NAME=test
-./scripts/provision-wallet.sh $WALLET_NAME
-```
+* Go to the <a href="https://devnet.faucet.agoric.net/">faucet</a>
+* Enter the address and select "send IST and provision smart wallet"
 
 2. Confirm the smart wallet provision
 
@@ -148,8 +143,9 @@ REPLACE WALLET_NAME WITH THE CHOSEN NAME IN STEP 4.1
 WALLET_NAME=test
 ASSET_IN=ATOM
 ASSET_OUT=USD
+CHAIN_ID=agoricdev-17
 cd ~/agoric-cl-middleware/scripts
-./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT
+./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT $CHAIN_ID
 ```
 
 ## Step 9: Confirm acceptance
