@@ -35,9 +35,9 @@ Before the setup, we have to run the following
 
 ```bash
 cd ~
-git clone https://github.com/jacquesvcritien/dapp-oracle.git
+git clone [https://github.com/jacquesvcritien/dapp-oracle.git](https://github.com/SimplyVC/dapp-oracle.git)
 cd dapp-oracle
-git checkout testnet-1
+git checkout emerynet
 agoric install
 ```
 
@@ -176,12 +176,16 @@ echo "{ \"$WALLET_ADDR\" : { \"oracleName\": \"$ORACLE_NAME\" }}" > ~/config/ora
 ## Step 11: Run setup script
 
 The next step involves running the script found at <b>dapp-oracle/chainlink-agoric/setup</b>.
+Replace <b>EMAIL</b> with your email to be used as the node's username
 
 ```bash
+EMAIL=<your_email>
 cd ~/dapp-oracle/chainlink-agoric
 docker-compose pull
-./setup
+./setup $EMAIL
 ```
+
+Once this is done, take a copy of the generated password from the output.
 
 This setup script does the following:
 1. Starts docker containers via <b>chainlink-agoric/internal-scripts/common.sh</b> for:
@@ -209,10 +213,10 @@ docker-compose up -d
 
 
 1. Go to http://IP:6691
-2. Log in with the following credentials
+2. Log in with the following credentials. The password can also be obtained from ~/dapp-oracle/chainlink-agoric/secrets/apicredentials
 ```
-notreal@fakeemail.ch
-twochains
+<your-email>
+<password-from-step11>
 ```
 3. Add the required bridges and job spec given out by the Simply Staking team
 
