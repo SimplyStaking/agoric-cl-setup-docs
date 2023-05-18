@@ -35,7 +35,7 @@ Before the setup, we have to run the following
 
 ```bash
 cd ~
-git clone [https://github.com/jacquesvcritien/dapp-oracle.git](https://github.com/SimplyVC/dapp-oracle.git)
+git clone https://github.com/SimplyStaking/dapp-oracle
 cd dapp-oracle
 git checkout emerynet
 agoric install
@@ -47,7 +47,7 @@ Clone the repository containing the code for the middleware
 
 ```bash
 cd ~
-git clone https://github.com/SimplyVC/agoric-cl-middleware.git
+git clone https://github.com/SimplyStaking/agoric-cl-middleware.git
 cd agoric-cl-middleware
 yarn install
 ```
