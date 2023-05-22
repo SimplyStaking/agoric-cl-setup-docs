@@ -136,7 +136,7 @@ REPLACE WALLET_NAME WITH THE CHOSEN NAME IN STEP 4.1
 WALLET_NAME=test
 ASSET_IN=ATOM
 ASSET_OUT=USD
-CHAIN_ID=agoricdev-17
+CHAIN_ID=agoricdev-18
 cd ~/agoric-cl-middleware/scripts
 ./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT $CHAIN_ID
 ```
