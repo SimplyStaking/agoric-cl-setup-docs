@@ -38,7 +38,6 @@ cd ~
 git clone https://github.com/SimplyStaking/dapp-oracle
 cd dapp-oracle
 git checkout emerynet
-agoric install
 ```
 
 ## Step 3: Clone the middleware's repository
@@ -138,8 +137,9 @@ WALLET_NAME=test
 ASSET_IN=ATOM
 ASSET_OUT=USD
 CHAIN_ID=agoricdev-18
+AGORIC_RPC=http://127.0.0.1:26657
 cd ~/agoric-cl-middleware/scripts
-./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT $CHAIN_ID
+./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT $CHAIN_ID $AGORIC_RPC
 ```
 
 ## Step 9: Confirm acceptance
