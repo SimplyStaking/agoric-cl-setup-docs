@@ -48,7 +48,7 @@ Clone the repository containing the code for the middleware
 cd ~
 git clone https://github.com/SimplyStaking/agoric-cl-middleware.git
 cd agoric-cl-middleware
-git checkout agoricdev-19
+git checkout origin/agoricdev-19
 yarn install
 ```
 
