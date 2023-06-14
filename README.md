@@ -18,7 +18,6 @@ node --version # 16.17.0 or higher
 sudo npm install --global yarn
 git clone https://github.com/agoric/agoric-sdk
 cd agoric-sdk
-git checkout ea8c1c64911b4c58fb43635b25e17e3d50d0cf2a
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -37,7 +36,7 @@ Before the setup, we have to run the following
 cd ~
 git clone https://github.com/SimplyStaking/dapp-oracle
 cd dapp-oracle
-git checkout emerynet
+git checkout mainnet
 ```
 
 ## Step 3: Clone the middleware's repository
@@ -48,7 +47,7 @@ Clone the repository containing the code for the middleware
 cd ~
 git clone https://github.com/SimplyStaking/agoric-cl-middleware.git
 cd agoric-cl-middleware
-git checkout origin/agoricdev-19
+git checkout origin/mainnet
 yarn install
 ```
 
@@ -116,8 +115,9 @@ Once the node is synced, you need to provision the smart wallet
 
 1. Provision the smart wallet
 
-* Go to the <a href="https://devnet.faucet.agoric.net/">faucet</a>
-* Enter the address and select "send IST and provision smart wallet"
+```bash
+agoric wallet provision --spend --account "$WALLET_ADDR" --keyring-backend test
+```
 
 2. Confirm the smart wallet provision
 
@@ -136,7 +136,7 @@ REPLACE WALLET_NAME WITH THE CHOSEN NAME IN STEP 4.1
 WALLET_NAME=test
 ASSET_IN=ATOM
 ASSET_OUT=USD
-CHAIN_ID=agoricdev-19
+CHAIN_ID=agoric-3
 AGORIC_RPC=http://127.0.0.1:26657
 cd ~/agoric-cl-middleware/scripts
 ./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT $CHAIN_ID $AGORIC_RPC
