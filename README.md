@@ -51,27 +51,7 @@ git checkout origin/mainnet
 yarn install
 ```
 
-## Step 4: Create a key and send the address to the chain management team
-
-1. Create an agoric key
-
-REPLACE WALLET_NAME WITH YOUR PREFERRED NAME
-
-```bash
-WALLET_NAME=test
-agd keys add $WALLET_NAME --keyring-backend=test
-```
-
-2. Get the address
-
-```bash
-WALLET_ADDR=$(agd keys show "$WALLET_NAME" --keyring-backend test --output json | jq -r .address)
-echo "Address: $WALLET_ADDR"
-```
-
-3. Send the address to the oracle team
-
-## Step 5: Start a node
+## Step 4: Start a node
 
 
 1. Create a service file
@@ -109,7 +89,7 @@ echo $(agd status) | jq ".SyncInfo.catching_up"
 
 <b>Make sure the above is FALSE before going to the next step</b>
 
-## Step 6: Provision the smart wallet
+## Step 5: Provision the smart wallet
 
 Once the node is synced, you need to provision the smart wallet
 
@@ -124,13 +104,13 @@ agoric wallet provision --spend --account "$WALLET_ADDR" --keyring-backend test
 ```bash
 agoric wallet show --from "$WALLET_ADDR"
 ```
-## Step 7: Wait a minute or two to ensure that the provisioning is finished
+## Step 6: Wait a minute or two to ensure that the provisioning is finished
 
-## Step 8: Accepting the oracle invitation
+## Step 7: Accepting the oracle invitation
 
 The next step involves accepting the oracle invitation
 
-REPLACE WALLET_NAME WITH THE CHOSEN NAME IN STEP 4.1
+REPLACE WALLET_NAME WITH YOUR KEY NAME
 
 ```bash
 WALLET_NAME=test
@@ -142,7 +122,7 @@ cd ~/agoric-cl-middleware/scripts
 ./accept-oracle-invitation.sh $WALLET_NAME $ASSET_IN $ASSET_OUT $CHAIN_ID $AGORIC_RPC
 ```
 
-## Step 9: Confirm acceptance
+## Step 8: Confirm acceptance
 
 This step involves confirming that the oracle invitation was accepted in the previous step.
 
@@ -156,7 +136,7 @@ Then, under <b>offerStatuses</b>, make sure you have an accepted oracle invitati
 
 <img src="images/oracle_inv.png">
 
-## Step 10: Prepare configs for middleware and monitoring tool
+## Step 9: Prepare configs for middleware and monitoring tool
 
 REPLACE ORACLE_NAME WITH YOUR PREFERRED NAME
 
@@ -174,7 +154,7 @@ ORACLE_NAME="ORACLE1"
 echo "{ \"$WALLET_ADDR\" : { \"oracleName\": \"$ORACLE_NAME\" }}" > ~/config/oracles.json
 ```
 
-## Step 11: Run setup script
+## Step 10: Run setup script
 
 The next step involves running the script found at <b>dapp-oracle/chainlink-agoric/setup</b>.
 Replace <b>EMAIL</b> with your email to be used as the node's username
@@ -195,7 +175,7 @@ This setup script does the following:
 2. Adds the external initiator built inside the middleware to the Chainlink node via <b>chainlink-agoric/internal-scripts/add-ei.sh</b>
 3. Adds the external adapter built inside the middleware to the bridges section of the Chainlink node via <b>chainlink-agoric/internal-scripts/add-bridge.sh</b>
 
-## Step 12: Starting the middleware
+## Step 11: Starting the middleware
 
 To start the middleware, run the following commands
 
@@ -210,18 +190,18 @@ docker-compose up -d
 ```
 
 
-## Step 13: Adding Job to CL node
+## Step 12: Adding Job to CL node
 
 
 1. Go to http://IP:6691
 2. Log in with the following credentials. The password can also be obtained from ~/dapp-oracle/chainlink-agoric/secrets/apicredentials
 ```
 <your-email>
-<password-from-step11>
+<password-from-step10>
 ```
 3. Add the required bridges and job spec given out by the Simply Staking team
 
-## Step 14: Query updated price
+## Step 13: Query updated price
 
 Run the following
 
