@@ -36,7 +36,7 @@ Before the setup, we have to run the following
 cd ~
 git clone https://github.com/SimplyStaking/dapp-oracle
 cd dapp-oracle
-git checkout mainnet
+git checkout origin/mainnet
 ```
 
 ## Step 3: Clone the middleware's repository
