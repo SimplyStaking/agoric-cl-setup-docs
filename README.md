@@ -18,7 +18,7 @@ node --version # 16.17.0 or higher
 sudo npm install --global yarn
 git clone https://github.com/agoric/agoric-sdk
 cd agoric-sdk
-git checkout ea8c1c64911b4c58fb43635b25e17e3d50d0cf2a
+git checkout 92b6cd72484079b0349d8ccfa4510aeb820e8d67
 yarn install
 yarn build
 yarn link-cli ~/bin/agoric
@@ -48,7 +48,7 @@ Clone the repository containing the code for the middleware
 cd ~
 git clone https://github.com/SimplyStaking/agoric-cl-middleware.git
 cd agoric-cl-middleware
-git checkout origin/agoricdev-21
+git checkout origin/agoricdev-23
 yarn install
 ```
 
